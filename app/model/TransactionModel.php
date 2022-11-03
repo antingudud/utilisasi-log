@@ -87,14 +87,14 @@ class TransactionModel extends ConnectDB{
                     now(),
                     ?,
                     ?,
-                    (SELECT userNIK FROM user WHERE username = ?), ,
+                    (SELECT userNIK FROM user WHERE username COLLATE utf8mb4_bin = ?),
                     now(),
                     '',
-                    SELECT groupId, FROM user WHERE username COLLATE utf8mb4_bin = ?,
-                    (SELECT idDevice FROM device WHERE idDevice COLLATE utf8mb4_bin = ?)
+                    (SELECT groupId FROM user WHERE username COLLATE utf8mb4_bin = ?),
+                    ?
                     )";
         $stmt = $this->connectTo()->prepare($sql);
-        $stmt->bind_param("sddsss", $idTrx, $download, $upload, $username, $username, $idDevice);
+        $stmt->bind_param("sddsss",$idTrx, $download, $upload, $username, $username, $idDevice);
         $stmt->execute();
     }
 }

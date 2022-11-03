@@ -32,6 +32,7 @@ class inPageFunct {
   }
 
   formHandler(){
+    let request;
     $(document).ready(function(){
         $('#utilForm').submit(function() {
             event.preventDefault();
@@ -42,7 +43,7 @@ class inPageFunct {
             let idDevice = $('#device').val();
             let action = "true";
 
-            $.ajax({
+            request = $.ajax({
                 url: "/util/core/AJAXRouter.php",
                 type: "POST",
                 data: {
@@ -55,6 +56,15 @@ class inPageFunct {
                 success: function(){
                     console.log("ASUSMOMONGUS");
                 }                
+            })
+            request.done(function(response, textStatus, jqXHR){
+              console.log("main.js success");
+            })
+            request.fail(function(jqXHR, textStatus, errorThrown){
+              console.error(
+                "The following error occured: "+
+                textStatus,errorThrown
+              )
             })
         })
     })
