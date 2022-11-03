@@ -10,8 +10,8 @@ class Transaction extends TransactionModel{
         $result = $this->getTransac();
         return $result;
     }
-    public function submitIndex(){
-        
+    public function submitIndex($download, $upload, $idDevice){
+        TransactionModel::setTransac($download, $upload, $idDevice);
     }
 }
 ?>

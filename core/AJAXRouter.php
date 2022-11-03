@@ -6,6 +6,9 @@ if($_POST['action'] == "true"){
     $download = $_POST['download'];
     $upload = $_POST['upload'];
     $idDevice = $_POST['idDevice'];
-    $contr->submitIndex();
+    $contr->submitIndex($download,$upload,$idDevice);
+}
+else {
+    echo "<script>alert('sus amogus')</script>";
 }
 ?>

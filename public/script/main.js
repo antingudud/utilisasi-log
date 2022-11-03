@@ -37,7 +37,7 @@ class inPageFunct {
             event.preventDefault();
             console.log("sus");
 
-            let download = $('#ownload').val();
+            let download = $('#download').val();
             let upload = $('#upload').val();
             let idDevice = $('#device').val();
             let action = "true";
@@ -48,7 +48,8 @@ class inPageFunct {
                 data: {
                     download: download,
                     upload: upload,
-                    idDevice
+                    idDevice: idDevice,
+                    action: action
                 },
                 cache: false,
                 success: function(){
