@@ -1,5 +1,5 @@
 
-class inPageFunct {
+class InPageFunct {
   toggleCategory() {
     document.getElementById("lan").addEventListener("click", function () {
       console.log("SAY WHO");
@@ -41,7 +41,7 @@ class inPageFunct {
             let download = $('#download').val();
             let upload = $('#upload').val();
             let idDevice = $('#device').val();
-            let action = "true";
+            let action = "newEntry";
 
             request = $.ajax({
                 url: "/util/core/AJAXRouter.php",
@@ -68,5 +68,24 @@ class inPageFunct {
             })
         })
     })
+  }
+}
+
+class Misc{
+  tellTime(){
+    let today = new Date();
+    let currentHour = today.getHours();
+    let whatTimeIsIt;
+
+    if (currentHour <= 10){
+      whatTimeIsIt = "morning";
+    } else if (currentHour <= 15){
+      whatTimeIsIt = "afternoon";
+    } else if( currentHour <= 18) {
+      whatTimeIsIt = "evening";
+    } else {
+      whatTimeIsIt = "night";
+    }
+    return whatTimeIsIt;
   }
 }

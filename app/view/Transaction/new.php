@@ -32,11 +32,11 @@
                 </li>
                 <li>
                     <label for="download">download</label>
-                    <input type="number" step="0.001" id="download" name="download" required>
+                    <input type="number" step="any" id="download" name="download" required>
                 </li>
                 <li>
                     <label for="upload">upload</label>
-                    <input type="number" step="0.001" id="upload" name="upload" required>
+                    <input type="number" step="any" id="upload" name="upload" required>
                 </li>
                 <li>
                     <button name="submit" id="submit">Submit</button>
@@ -48,7 +48,7 @@
 
 
     <script>
-        let ajax = new inPageFunct();
+        let ajax = new InPageFunct();
         ajax.toggleCategory();
         ajax.formHandler();
     </script>

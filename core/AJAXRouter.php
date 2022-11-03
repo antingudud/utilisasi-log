@@ -1,6 +1,9 @@
 <?php
 require($_SERVER['DOCUMENT_ROOT'] . "/util/include/include.php");
-if($_POST['action'] == "true"){
+
+$router = new Router();
+
+if($_POST['action'] == "newEntry"){
     $contr = new Transaction;
     $download = (float)$_POST['download'];
     $upload = (float)$_POST['upload'];
@@ -8,6 +11,5 @@ if($_POST['action'] == "true"){
     $contr->submitIndex($download,$upload,$idDevice);
 }
 else {
-    echo "<script>alert('sus amogus')</script>";
 }
 ?>

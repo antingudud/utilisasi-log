@@ -62,6 +62,12 @@ class Router extends ConnectDB{
         }
     }
 
+    public function dispatchScript($data){
+        if($data["action"] == "newEntry"){
+
+        }
+    }
+
     protected function convertToStudlyCase($string){
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
     }

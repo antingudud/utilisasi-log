@@ -23,7 +23,10 @@ class TransactionModel extends ConnectDB{
                 LEFT JOIN
                     user
                 ON
-                    user.userNIK = transaction.userNIK";
+                    user.userNIK = transaction.userNIK
+                ORDER BY
+                    dateTime
+                ASC";
         $stmt = $this->connectTo()->query($sql);
         #$stmt->execute();
 
@@ -34,6 +37,7 @@ class TransactionModel extends ConnectDB{
 
     protected function getTransacFromCategory($category){
         $sql = "SELECT 
+                    idTrx,
                     transaction.dateTime, 
                     device.nameDevice, 
                     category.nameCategory, 
@@ -69,7 +73,7 @@ class TransactionModel extends ConnectDB{
 
     protected function setTransac($download, $upload, $idDevice){
         $idTrx = substr(uniqid(),5);
-        $username = "mamangus";
+        $username = "dummy";
         $sql = "INSERT INTO
                     transaction(
                         idTrx,

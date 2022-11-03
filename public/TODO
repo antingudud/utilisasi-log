@@ -4,7 +4,6 @@
 // https://www.youtube.com/watch?v=YuPathl4Mq8
 // Separate each class to its own files (One class = one file)
 // Figure out the routing
-<!-- TODO: Transaction table should be able to be viewed based on category, use AJAX for this. -->
+<!-- TODO: Transaction table should be able to be viewed based on category, date or something else using the header as the button. -->
 <!-- Rewatch AJAX crash course -->
 <!-- Build AJAX ROUTER -->
-<!-- FIXME: AJAX post -->
