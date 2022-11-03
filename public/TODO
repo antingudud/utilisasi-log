@@ -1,0 +1,10 @@
+// View based on date
+// View based on category/device
+// Implement MVC
+// https://www.youtube.com/watch?v=YuPathl4Mq8
+// Separate each class to its own files (One class = one file)
+// Figure out the routing
+<!-- TODO: Transaction table should be able to be viewed based on category, use AJAX for this. -->
+<!-- Rewatch AJAX crash course -->
+<!-- Build AJAX ROUTER -->
+<!-- FIXME: AJAX post -->
