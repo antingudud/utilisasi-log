@@ -2,6 +2,7 @@
 class TransactionModel extends ConnectDB{
     protected function getTransac(){
         $sql = "SELECT 
+                    idTrx,
                     transaction.dateTime, 
                     device.nameDevice, 
                     category.nameCategory, 
@@ -12,7 +13,7 @@ class TransactionModel extends ConnectDB{
                     transaction.dateModified
                 FROM 
                     device 
-                LEFT JOIN 
+                RIGHT JOIN 
                     transaction 
                 ON 
                     device.idDevice = transaction.idDevice 
@@ -100,6 +101,29 @@ class TransactionModel extends ConnectDB{
         $stmt = $this->connectTo()->prepare($sql);
         $stmt->bind_param("sddsss",$idTrx, $download, $upload, $username, $username, $idDevice);
         $stmt->execute();
+    }
+    protected function delTransac($id){
+        if(count($id) >= 1){
+            $placeholders = str_repeat('?,', count($id) - 1) . '?';
+            $types = str_repeat("s", count($id));
+            $respond = "success";
+
+            $sql = "DELETE FROM
+                        transaction
+                    WHERE
+                        idTrx
+                    IN
+                        (
+                         " . $placeholders . "   
+                        )";
+            $stmt = $this->connectTo()->prepare($sql);
+            $stmt->bind_param($types, ...$id);
+            $stmt->execute();
+            return $respond;
+        } 
+        else {
+            print "It's empty";
+        }
     }
 }
 ?>

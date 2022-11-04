@@ -13,5 +13,8 @@ class Transaction extends TransactionModel{
     public function submitIndex($download, $upload, $idDevice){
         TransactionModel::setTransac($download, $upload, $idDevice);
     }
+    public function deleteIndex($id){
+        TransactionModel::delTransac($id);
+    }
 }
 ?>
