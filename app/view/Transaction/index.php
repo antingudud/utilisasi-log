@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<?php
+require_once ($_SERVER['DOCUMENT_ROOT'] . "/util/include/include.php");
+$rows = (new Transaction)->showTransac();
+?>
 <html lang="en">
 
 <head>
@@ -30,8 +34,7 @@
             <table id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
                 <tr>
                     <th>Tanggal</th>
-                    <th>Category</th>
-                    <th>Device</th>
+                    <th>Interface</th>
                     <th>Download</th>
                     <th>Upload</th>
                     <th>Author</th>
@@ -43,11 +46,10 @@
                     </th>
                 </tr>
                 <?php $indexList = 1;
-                foreach ((new Transaction)->showTransac() as $row) : ?>
+                foreach ($rows as $row) : ?>
                     <tr>
-                        <td><?php print $row["dateTime"]; ?></td>
-                        <td><?php print $row["nameCategory"]; ?></td>
-                        <td><?php print $row["nameDevice"]; ?></td>
+                        <td><?php print date('D, j M y', $row['UNIX_TIMESTAMP(dateTime)'] ); ?></td>
+                        <td><?php print $row["nameDevice"] . $row["nameCategory"]; ?></td>
                         <td><?php print $row["download"]; ?></td>
                         <td><?php print $row["upload"]; ?></td>
                         <td><?php print $row["fullname"]; ?></td>
@@ -63,7 +65,8 @@
     </div>
 
     <script>
-        new InPageFunct().toggleAction();
+        new InPageFunct().deleteUpdate("#viewTableForm");
+        // new InPageFunct().toggleAction("#viewTableForm");
         new Table().refreshTable();
     </script>
 </body>

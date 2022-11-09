@@ -3,7 +3,7 @@ class TransactionModel extends ConnectDB{
     protected function getTransac(){
         $sql = "SELECT 
                     idTrx,
-                    transaction.dateTime, 
+                    UNIX_TIMESTAMP(dateTime), 
                     device.nameDevice, 
                     category.nameCategory, 
                     transaction.download, 
@@ -70,6 +70,22 @@ class TransactionModel extends ConnectDB{
         $getresult = $stmt->get_result();
         $result = $getresult->fetch_all(MYSQLI_ASSOC);
         return $result;
+    }
+
+    protected function customTransac($query, $params, $action, $types = null){
+        $stmt = $this->connectTo()->prepare($query);
+        $types = $types ?: str_repeat('s', count($params));
+        // echo $this->connectTo()->error;
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        if ($action == "select"){
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            print_r (json_encode($result));
+            return json_encode($result);
+        }
+        $result = $stmt->get_result();
+        print_r(json_encode($result));
+        echo ($this->connectTo()->error);
     }
 
     protected function setTransac($download, $upload, $idDevice){

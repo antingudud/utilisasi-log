@@ -6,6 +6,9 @@ class Transaction extends TransactionModel{
     public function new(){
         View::render('Transaction/new.php');
     }
+    public function edit(){
+        View::render('Transaction/update.php');
+    }
     public function showTransac(){
         $result = $this->getTransac();
         return $result;
@@ -15,6 +18,9 @@ class Transaction extends TransactionModel{
     }
     public function deleteIndex($id){
         TransactionModel::delTransac($id);
+    }
+    public function transac($query, $params, $action){
+        TransactionModel::customTransac($query, $params, $action);
     }
 }
 ?>

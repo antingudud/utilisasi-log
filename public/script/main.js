@@ -27,42 +27,128 @@ class InPageFunct {
     });
   }
 
-  toggleAction() {
+  deleteUpdate(target) {
     let request;
-    let buttonPressed;
+
     $(document).ready(function () {
-      $("#viewTableForm").submit(function () {
-        event.preventDefault();
-        console.log("NEW DELETION");
-        let s = 1;
-        let idValues = [];
+      console.log("iamsus")
+      console.log(target);
+      $(target).submit(function (e) {
+        e.preventDefault();
+        // Update
+        if (e.originalEvent["submitter"]["id"] == "buttonViewUpdate") {
+          let idValues = [];
+          
+          $.each($("input[type=checkbox]:checked"), function () {
+            idValues.push(this.value);
+          });
 
-        let action = "deleteEntry";
+          if (idValues.length > 0){
+            console.log(`I am updating ${idValues.length} thing(s)`);
+            let action = "updateEntry";
 
-        console.log(buttonPressed);
+            request = $.ajax({
+              url: "/util/core/AJAXRouter.php",
+              type: "POST",
+              data: {
+                id: idValues,
+                action: action,
+              },
+              cache: false,
+              success: function (response) {
+                console.log("Updated");
+                $(target).load(
+                  "/util/app/view/Transaction/update.php #editForm", {$_POST: response}, function () {
+                new InPageFunct().deleteUpdate("#editForm");
+                  }
+                );
+                console.log(response)
+              },
+              error: function(){
+                console.log("Error at updating.");
+              },
+            });
+          }
+          else {
+            alert(`Nothing to update.`);
+          }
+        } 
+        // Delete
+        else if (e.originalEvent["submitter"]["id"] == "buttonViewDelete") {
+          let idValues = [];
 
-        $.each($("input[type=checkbox]:checked"), function () {
-          console.log(this);
-          idValues.push(this.value);
-        });
+          let action = "deleteEntry";
 
-        console.log(idValues);
-        if (idValues.length > 0) {
+          $.each($("input[type=checkbox]:checked"), function () {
+            idValues.push(this.value);
+          });
+
+          if (idValues.length > 0) {
+            request = $.ajax({
+              url: "/util/core/AJAXRouter.php",
+              type: "POST",
+              data: {
+                id: idValues,
+                action: action,
+              },
+              cache: false,
+              success: function () {
+                console.log("Deleted");
+                $(target).load(
+                  "/util/app/view/Transaction/index.php #indexViewTable"
+                );
+              },
+              error: function(){
+                console.log("Error at deleting.");
+              },
+            });
+          } 
+          
+          else {
+            alert("Nothing to delete.");
+          }
+        }
+        
+        // Update form
+        else if (e.originalEvent["submitter"]["id"] == "buttonSubmitEdit") {
+          alert("I AM aaa");
+          let idValues = [];
+          let action = "submitEditEntry"
+          let download = [];
+          let upload = [];
+
+          for (let i = 0; i < $(":input[type=number][name='download']").length; i++) {
+            download.push( $(`#download${i}`).val() )
+            upload.push( $(`#upload${i}`).val() )
+            idValues.push( $(`#id${i}`).val() )
+          }
+          console.log(download);
+          console.log(upload);
+          console.log(idValues)
+
+
           request = $.ajax({
             url: "/util/core/AJAXRouter.php",
             type: "POST",
             data: {
-              id: idValues,
+              idTrx: idValues,
+              download: download,
+              upload: upload,
               action: action,
             },
             cache: false,
-            success: function (response) {
-              console.log("Deleted");
-              $('#indexViewTable').html(response);
+            success: function () {
+              console.log("sdsd");
             },
           });
-        } else {
-          alert("Array is empty.");
+        }
+
+
+        else {
+          console.log(
+            `ERR! ID: ${e.originalEvent["submitter"]["id"]} not found!`
+          );
+          return false;
         }
       });
     });
@@ -77,8 +163,8 @@ class InPageFunct {
         event.preventDefault();
         console.log("sus");
 
-        let asus = $('table tr:nth-child(2)');
-        console.log(asus)
+        let asus = $("table tr:nth-child(2)");
+        console.log(asus);
 
         let download = $("#download").val();
         let upload = $("#upload").val();
@@ -147,19 +233,10 @@ class Table {
       $("#refreshViewIndex").click(function () {
         event.preventDefault();
 
-        let action = "refreshTable";
+        $("#viewTableForm").load(
+          "/util/app/view/Transaction/index.php #indexViewTable"
+        );
 
-        request = $.ajax({
-          url: "/util/php_util/tableForRefresh.php",
-          type: "POST",
-          data: {
-            action: action,
-          },
-          cache: false,
-          success: function (response) {
-            $("#indexViewTable").html(response);
-          },
-        });
       });
     });
   }
