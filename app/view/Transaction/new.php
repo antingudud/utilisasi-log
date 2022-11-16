@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload data</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="../script/main.js">
+    <script src="../script/classes/New.js">
     </script>
 </head>
 
@@ -48,7 +48,7 @@
 
 
     <script>
-        let ajax = new InPageFunct();
+        let ajax = new New();
         ajax.toggleCategory();
         ajax.formHandler();
     </script>

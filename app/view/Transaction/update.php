@@ -26,11 +26,11 @@
                     <input id="id<?php print($indexList) ?>" value = "<?php print ( $array[$indexList]['idTrx'] . substr(uniqid(), 0, 6) ) ?>" type="hidden" readonly></input>
                     <li>
                         <label for="download">download</label>
-                        <input type="number" step="any" id="download<?php print($indexList) ?>" name="download" placeholder="<?php print $array[$indexList]['download'] ?>" required>
+                        <input type="number" step="any" id="download<?php print($indexList) ?>" name="download" value="<?php print $array[$indexList]['download'] ?>" required>
                     </li>
                     <li>
                         <label for="upload">upload</label>
-                        <input type="number" step="any" id="upload<?php print($indexList) ?>" name="upload" placeholder="<?php print $array[$indexList]['upload'] ?>" required>
+                        <input type="number" step="any" id="upload<?php print($indexList) ?>" name="upload" value="<?php print $array[$indexList]['upload'] ?>" required>
                     </li>
                 <?php $indexList++; endforeach ?>
                         <button type="submit" name="submit" id="buttonSubmitEdit">Submit</button>

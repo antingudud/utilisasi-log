@@ -1,49 +1,19 @@
 class InPageFunct {
-  toggleCategory() {
-    document.getElementById("lan").addEventListener("click", function () {
-      console.log("SAY WHO");
-      let xhr = new XMLHttpRequest();
-      xhr.open("GET", "/util/php_util/insertLan.php");
-      xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          document.getElementById("device").innerHTML = this.responseText;
-        }
-      };
-
-      xhr.send();
-    });
-
-    document.getElementById("wan").addEventListener("click", function () {
-      console.log("SAY WHO");
-      let xhr = new XMLHttpRequest();
-      xhr.open("GET", "/util/php_util/insertWan.php");
-      xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          document.getElementById("device").innerHTML = this.responseText;
-        }
-      };
-
-      xhr.send();
-    });
-  }
-
   deleteUpdate(target) {
     let request;
 
     $(document).ready(function () {
-      console.log("iamsus")
-      console.log(target);
       $(target).submit(function (e) {
         e.preventDefault();
         // Update
         if (e.originalEvent["submitter"]["id"] == "buttonViewUpdate") {
           let idValues = [];
-          
+
           $.each($("input[type=checkbox]:checked"), function () {
             idValues.push(this.value);
           });
 
-          if (idValues.length > 0){
+          if (idValues.length > 0) {
             console.log(`I am updating ${idValues.length} thing(s)`);
             let action = "updateEntry";
 
@@ -58,74 +28,78 @@ class InPageFunct {
               success: function (response) {
                 console.log("Updated");
                 $(target).load(
-                  "/util/app/view/Transaction/update.php #editForm", {$_POST: response}, function () {
-                new InPageFunct().deleteUpdate("#editForm");
+                  "/util/app/view/Transaction/update.php #editForm",
+                  { $_POST: response },
+                  function () {
+                    new InPageFunct().deleteUpdate("#editForm");
                   }
                 );
-                console.log(response)
+                console.log(response);
               },
-              error: function(){
+              error: function () {
                 console.log("Error at updating.");
               },
             });
-          }
-          else {
+          } else {
             alert(`Nothing to update.`);
           }
-        } 
+        }
         // Delete
         else if (e.originalEvent["submitter"]["id"] == "buttonViewDelete") {
-          let idValues = [];
+          if (new InPageFunct().confirmBox("delete") == true) {
+            let idValues = [];
 
-          let action = "deleteEntry";
+            let action = "deleteEntry";
 
-          $.each($("input[type=checkbox]:checked"), function () {
-            idValues.push(this.value);
-          });
-
-          if (idValues.length > 0) {
-            request = $.ajax({
-              url: "/util/core/AJAXRouter.php",
-              type: "POST",
-              data: {
-                id: idValues,
-                action: action,
-              },
-              cache: false,
-              success: function () {
-                console.log("Deleted");
-                $(target).load(
-                  "/util/app/view/Transaction/index.php #indexViewTable"
-                );
-              },
-              error: function(){
-                console.log("Error at deleting.");
-              },
+            $.each($("input[type=checkbox]:checked"), function () {
+              idValues.push(this.value);
             });
-          } 
-          
-          else {
-            alert("Nothing to delete.");
+
+            if (idValues.length > 0) {
+              request = $.ajax({
+                url: "/util/core/AJAXRouter.php",
+                type: "POST",
+                data: {
+                  id: idValues,
+                  action: action,
+                },
+                cache: false,
+                success: function () {
+                  console.log("Deleted");
+                  $(target).load(
+                    "/util/app/view/Transaction/index.php #indexViewTable"
+                  );
+                },
+                error: function () {
+                  console.log("Error at deleting.");
+                },
+              });
+            } else {
+              alert("Nothing to delete.");
+            }
           }
         }
-        
+
         // Update form
         else if (e.originalEvent["submitter"]["id"] == "buttonSubmitEdit") {
           alert("I AM aaa");
           let idValues = [];
-          let action = "submitEditEntry"
+          let action = "submitEditEntry";
           let download = [];
           let upload = [];
 
-          for (let i = 0; i < $(":input[type=number][name='download']").length; i++) {
-            download.push( $(`#download${i}`).val() )
-            upload.push( $(`#upload${i}`).val() )
-            idValues.push( $(`#id${i}`).val() )
+          for (
+            let i = 0;
+            i < $(":input[type=number][name='download']").length;
+            i++
+          ) {
+            download.push($(`#download${i}`).val());
+            upload.push($(`#upload${i}`).val());
+            idValues.push($(`#id${i}`).val());
           }
           console.log(download);
           console.log(upload);
-          console.log(idValues)
-
+          console.log(idValues);
 
           request = $.ajax({
             url: "/util/core/AJAXRouter.php",
@@ -141,10 +115,7 @@ class InPageFunct {
               console.log("sdsd");
             },
           });
-        }
-
-
-        else {
+        } else {
           console.log(
             `ERR! ID: ${e.originalEvent["submitter"]["id"]} not found!`
           );
@@ -154,52 +125,8 @@ class InPageFunct {
     });
   }
 
-  loadTo() {}
-
-  formHandler() {
-    let request;
-    $(document).ready(function () {
-      $("#utilForm").submit(function () {
-        event.preventDefault();
-        console.log("sus");
-
-        let asus = $("table tr:nth-child(2)");
-        console.log(asus);
-
-        let download = $("#download").val();
-        let upload = $("#upload").val();
-        let idDevice = $("#device").val();
-        let action = "newEntry";
-
-        request = $.ajax({
-          url: "/util/core/AJAXRouter.php",
-          type: "POST",
-          data: {
-            download: download,
-            upload: upload,
-            idDevice: idDevice,
-            action: action,
-          },
-          cache: false,
-          success: function () {
-            console.log("ASUSMOMONGUS");
-          },
-        });
-        request.done(function (response, textStatus, jqXHR) {
-          console.log("main.js success");
-        });
-        request.fail(function (jqXHR, textStatus, errorThrown) {
-          console.error(
-            "The following error occured: " + textStatus,
-            errorThrown
-          );
-        });
-      });
-    });
-  }
-
   confirmBox($message) {
-    return alert(`Are you sure you want to ${$message}?`);
+    return confirm(`Are you sure you want to ${$message}?`); 
   }
 
   checkboxCheck() {
@@ -228,7 +155,6 @@ class Misc {
 
 class Table {
   refreshTable() {
-    let request;
     $(document).ready(function () {
       $("#refreshViewIndex").click(function () {
         event.preventDefault();
@@ -236,8 +162,39 @@ class Table {
         $("#viewTableForm").load(
           "/util/app/view/Transaction/index.php #indexViewTable"
         );
-
       });
     });
+  }
+
+  changeLook()
+  {
+    $(document).ready(function () 
+    {
+      $("#alternateTableLook").click(function () 
+      {
+        event.preventDefault();
+        
+        let request;
+        request = $.ajax({
+          url: "/util/core/AJAXRouter.php",
+          type: "POST",
+          data: {
+            action: "showView"
+          },
+          cache: false,
+          success: function (response) {
+            console.log("Look changed");
+            $("#viewTableForm").load(
+              "/util/app/view/Transaction/alternate.php",
+              {$_POST: response}
+            );
+          },
+          error: function () {
+            console.log("Error at changing look.");
+          },
+        });
+      })
+    }
+    )
   }
 }

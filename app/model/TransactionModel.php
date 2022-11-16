@@ -72,10 +72,9 @@ class TransactionModel extends ConnectDB{
         return $result;
     }
 
-    protected function customTransac($query, $params, $action, $types = null){
+    protected function queryTransaction($query, $params, $action, $types = null){
         $stmt = $this->connectTo()->prepare($query);
         $types = $types ?: str_repeat('s', count($params));
-        // echo $this->connectTo()->error;
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
         if ($action == "select"){

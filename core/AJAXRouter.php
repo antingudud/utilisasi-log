@@ -11,10 +11,12 @@ switch ($_POST['action']) {
         $idDevice = strval($_POST['idDevice']);
         $contr->submitIndex($download, $upload, $idDevice);
         break;
+
     case "deleteEntry":
         $id = $_POST['id'];
         $contr->deleteIndex($id);
         break;
+
     case "updateEntry":
         $action = "select";
         $params = $_POST['id'];
@@ -22,12 +24,13 @@ switch ($_POST['action']) {
         if(count($params) > 1){
             $placeholders = str_repeat('?,', count($params) - 1) . '?';
             $query .= " IN ( {$placeholders} ) ORDER BY dateTime ASC";
-            $contr->transac($query, $params, $action);
+            $contr->getTransaction($query, $params, $action);
         } else {
             $query .= " = ?";
-            $contr->transac($query, $params, $action);
+            $contr->getTransaction($query, $params, $action);
         }
         break;
+
     case "submitEditEntry":
         $action = "other";
         $idTrx = $_POST['idTrx'];
@@ -51,8 +54,15 @@ switch ($_POST['action']) {
             print_r($idTrx[$index] . "<br>");
         }
         $query = "UPDATE transaction SET download = CASE ". $dlulPlaceholder . "END, upload = CASE " . $dlulPlaceholder . "END, dateModified = now() WHERE idTrx IN ( " . str_repeat('?,', count($idTrx) - 1) . '?' . " )";
-        $contr->transac($query, array_merge($dl, $ul, $idTrx), $action, $types);
+        $contr->getTransaction($query, array_merge($dl, $ul, $idTrx), $action, $types);
         break;
+
+    case "showView":
+        $query = "SELECT * FROM util_pivotted WHERE ?";
+        $params = [1];
+        $contr->getTransaction($query, $params, "select");
+        break;
+
     default:
         print "No such action: {$_POST['action']}";
         return false;

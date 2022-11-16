@@ -19,8 +19,19 @@ class Transaction extends TransactionModel{
     public function deleteIndex($id){
         TransactionModel::delTransac($id);
     }
-    public function transac($query, $params, $action){
-        TransactionModel::customTransac($query, $params, $action);
+    public function getTransaction($query, $params, $action){
+        TransactionModel::queryTransaction($query, $params, $action);
+    }
+    public function transpose($array)
+    {
+      $retData = array();
+    
+        foreach ($array as $row => $columns) {
+          foreach ($columns as $row2 => $column2) {
+              $retData[$row2][$row] = $column2;
+          }
+        }
+      return $retData;
     }
 }
 ?>

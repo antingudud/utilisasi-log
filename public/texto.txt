@@ -1,1 +1,41 @@
-AMONG US
+CREATE OR REPLACE VIEW util_correct_form AS (
+	SELECT dateTime, dateCreated,
+    CASE WHEN nameDevice = "CR (Indihome)" then download end as "download_CR_Indihome",
+    CASE WHEN nameDevice = "CR (Indihome)" then upload end as "upload_CR_Indihome",
+	CASE WHEN nameDevice = "CP (Indihome)" then download end as "download_CP_Indihome",
+    CASE WHEN nameDevice = "CP (Indihome)" then upload end as "upload_CP_Indihome",
+    CASE WHEN nameDevice = "PK (Biznet)" then download end as "download_PK_Biznet",
+    CASE WHEN nameDevice = "PK (Biznet)" then upload end as "upload_PK_Biznet",
+	CASE WHEN nameDevice = "PK (Indosat)" then download end as "download_PK_Indosat",
+    CASE WHEN nameDevice = "PK (Indosat)" then upload end as "upload_PK_Indosat",
+    CASE WHEN nameDevice = "CK (Orbit)" then download end as "download_CK_Orbit",
+    CASE WHEN nameDevice = "CK (Orbit)" then upload end as "upload_CK_Orbit",
+	CASE WHEN nameDevice = "CK (XL)" then download end as "download_CK_XL",
+    CASE WHEN nameDevice = "CK (XL)" then upload end as "upload_CK_XL"
+    FROM transaction
+    LEFT JOIN
+    device
+	ON transaction.idDevice = device.idDevice
+);
+SELECT * FROM util_correct_form;
+
+CREATE OR REPLACE VIEW util_pivotted AS 
+(
+    SELECT
+    dateTime, dateCreated,
+    SUM(download_CR_Indihome) AS download_CR_Indihome,
+    SUM(upload_CR_Indihome) AS upload_CR_Indihome,
+    SUM(download_CP_Indihome) AS download_CP_Indihome,
+    SUM(upload_CP_Indihome) upload_CP_Indihome,
+    SUM(download_PK_Biznet) AS download_PK_Biznet,
+    SUM(upload_PK_Biznet) AS upload_PK_Biznet,
+    SUM(download_PK_Indosat) AS download_PK_Indosat,
+    SUM(upload_PK_Indosat) AS upload_PK_Indosat,
+    SUM(download_CK_Orbit) AS download_CK_Orbit,
+    SUM(upload_CK_Orbit) AS upload_CK_Orbit,
+    SUM(download_CK_XL) AS download_CK_IXL,
+    SUM(upload_CK_XL) upload_CK_XL
+    FROM util_correct_form
+    GROUP BY dateCreated
+);
+SELECT * FROM util_pivotted;
