@@ -186,7 +186,7 @@ class Table {
             console.log("Look changed");
             $("#viewTableForm").load(
               "/util/app/view/Transaction/alternate.php",
-              {$_POST: response}
+              {$arrayData: response}
             );
           },
           error: function () {
