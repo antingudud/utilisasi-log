@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . "/util/include/include.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
 $rows = (new Transaction)->showTransac();
 ?>
+
 <html lang="en">
 
 <head>

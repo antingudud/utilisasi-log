@@ -1,0 +1,4 @@
+app/config/config.env
+vendor/
+.vscode/
+bfg-1.14.0.jar

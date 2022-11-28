@@ -1,6 +1,6 @@
 <?php
-require($_SERVER['DOCUMENT_ROOT'] . "/util/include/include.php");
-$a = new device;
+require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
+$a = new Device;
 $e = $a->showDeviceCategory("LAN");
 ?>
 <?php $iteration = 0 ?>

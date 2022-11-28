@@ -18,7 +18,7 @@ class InPageFunct {
             let action = "updateEntry";
 
             request = $.ajax({
-              url: "/util/core/AJAXRouter.php",
+              url: "/util/app/core/AJAXRouter.php",
               type: "POST",
               data: {
                 id: idValues,
@@ -57,7 +57,7 @@ class InPageFunct {
 
             if (idValues.length > 0) {
               request = $.ajax({
-                url: "/util/core/AJAXRouter.php",
+                url: "/util/app/core/AJAXRouter.php",
                 type: "POST",
                 data: {
                   id: idValues,
@@ -102,7 +102,7 @@ class InPageFunct {
           console.log(idValues);
 
           request = $.ajax({
-            url: "/util/core/AJAXRouter.php",
+            url: "/util/app/core/AJAXRouter.php",
             type: "POST",
             data: {
               idTrx: idValues,
@@ -176,7 +176,7 @@ class Table {
         
         let request;
         request = $.ajax({
-          url: "/util/core/AJAXRouter.php",
+          url: "/util/app/core/AJAXRouter.php",
           type: "POST",
           data: {
             action: "showView"

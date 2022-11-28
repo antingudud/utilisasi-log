@@ -1,5 +1,5 @@
 <?php
-require($_SERVER['DOCUMENT_ROOT'] . "/util/include/include.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
 
 $router = new Router();
 $contr = new Transaction;

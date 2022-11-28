@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-include "include/include.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
 
 
 $e = new Transaction;
