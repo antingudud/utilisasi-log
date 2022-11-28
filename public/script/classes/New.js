@@ -44,7 +44,7 @@ class New
             let action = "newEntry";
     
             request = $.ajax({
-              url: "/util/core/AJAXRouter.php",
+              url: "/util/app/core/AJAXRouter.php",
               type: "POST",
               data: {
                 download: download,
