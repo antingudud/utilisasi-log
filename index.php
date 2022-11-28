@@ -1,18 +1,16 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
+require_once 'vendor/autoload.php';
 session_start();
 
 $router = new \Bramus\Router\Router();
 
-// $router->setBasePath('/util/public');
-
 // $router = new Router();
 $router->set404(function () {
     header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-    include $_SERVER['DOCUMENT_ROOT'] . "/util/app/view/404.php";
+    include "app/view/404.php";
 });
 $router->get('/', function() {
-    include $_SERVER['DOCUMENT_ROOT'] . "/util/app/view/Home/index.php";
+    include "/app/view/Home/index.php";
 });
 $router->all('/view', function () {
     $Transaction = new Transaction;

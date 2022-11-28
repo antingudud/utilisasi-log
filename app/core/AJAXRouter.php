@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
+require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $router = new Router();
 $contr = new Transaction;

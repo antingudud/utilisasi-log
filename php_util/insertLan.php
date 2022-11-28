@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
+require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
 $a = new Device;
 $e = $a->showDeviceCategory("LAN");
 ?>

@@ -1,5 +1,5 @@
 <?php
-require($_SERVER['DOCUMENT_ROOT'] . "/util/include/include.php");
+require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 ?>
 <tr>
     <th>Tanggal</th>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
+require_once dirname(__DIR__, 1) . '/util/vendor/autoload.php';
 ?>
 
 
@@ -69,7 +69,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
         document.getElementById('lan').addEventListener('click',function(){
             console.log("SAY WHO");
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', '/util/php_util/insertLan.php');
+            xhr.open('GET', '/utilisasi-log/php_util/insertLan.php');
             xhr.onreadystatechange = function(){
                 if(this.readyState == 4 && this.status == 200){
                     document.getElementById("device").innerHTML = this.responseText;
@@ -82,7 +82,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
         document.getElementById('wan').addEventListener('click',function(){
             console.log("SAY WHO");
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', '/util/php_util/insertWan.php');
+            xhr.open('GET', '/utilisasi-log/php_util/insertWan.php');
             xhr.onreadystatechange = function(){
                 if(this.readyState == 4 && this.status == 200){
                     document.getElementById("device").innerHTML = this.responseText;
@@ -95,6 +95,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/util/vendor/autoload.php';
 
 </body>
 
-<script type="text/javascript" src="/util/javascript/main.js"></script>
+<script type="text/javascript" src="/utilisasi-log/javascript/main.js"></script>
 
 </html>

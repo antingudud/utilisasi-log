@@ -18,7 +18,7 @@ class InPageFunct {
             let action = "updateEntry";
 
             request = $.ajax({
-              url: "/util/app/core/AJAXRouter.php",
+              url: "/utilisasi-log/app/core/AJAXRouter.php",
               type: "POST",
               data: {
                 id: idValues,
@@ -28,7 +28,7 @@ class InPageFunct {
               success: function (response) {
                 console.log("Updated");
                 $(target).load(
-                  "/util/app/view/Transaction/update.php #editForm",
+                  "/utilisasi-log/app/view/Transaction/update.php #editForm",
                   { $_POST: response },
                   function () {
                     new InPageFunct().deleteUpdate("#editForm");
@@ -57,7 +57,7 @@ class InPageFunct {
 
             if (idValues.length > 0) {
               request = $.ajax({
-                url: "/util/app/core/AJAXRouter.php",
+                url: "/utilisasi-log/app/core/AJAXRouter.php",
                 type: "POST",
                 data: {
                   id: idValues,
@@ -67,7 +67,7 @@ class InPageFunct {
                 success: function () {
                   console.log("Deleted");
                   $(target).load(
-                    "/util/app/view/Transaction/index.php #indexViewTable"
+                    "/utilisasi-log/app/view/Transaction/index.php #indexViewTable"
                   );
                 },
                 error: function () {
@@ -102,7 +102,7 @@ class InPageFunct {
           console.log(idValues);
 
           request = $.ajax({
-            url: "/util/app/core/AJAXRouter.php",
+            url: "/utilisasi-log/app/core/AJAXRouter.php",
             type: "POST",
             data: {
               idTrx: idValues,
@@ -160,7 +160,7 @@ class Table {
         event.preventDefault();
 
         $("#viewTableForm").load(
-          "/util/app/view/Transaction/index.php #indexViewTable"
+          "/utilisasi-log/app/view/Transaction/index.php #indexViewTable"
         );
       });
     });
@@ -176,7 +176,7 @@ class Table {
         
         let request;
         request = $.ajax({
-          url: "/util/app/core/AJAXRouter.php",
+          url: "/utilisasi-log/app/core/AJAXRouter.php",
           type: "POST",
           data: {
             action: "showView"
@@ -185,7 +185,7 @@ class Table {
           success: function (response) {
             console.log("Look changed");
             $("#viewTableForm").load(
-              "/util/app/view/Transaction/alternate.php",
+              "/utilisasi-log/app/view/Transaction/alternate.php",
               {$arrayData: response}
             );
           },

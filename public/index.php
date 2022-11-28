@@ -9,10 +9,10 @@ $router = new \Bramus\Router\Router();
 // $router = new Router();
 $router->set404(function () {
     header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-    include $_SERVER['DOCUMENT_ROOT'] . "/util/app/view/404.php";
+    include $_SERVER['DOCUMENT_ROOT'] . "/utilisasi-log/app/view/404.php";
 });
 $router->get('/', function() {
-    include $_SERVER['DOCUMENT_ROOT'] . "/util/app/view/Home/index.php";
+    include $_SERVER['DOCUMENT_ROOT'] . "/utilisasi-log/app/view/Home/index.php";
 });
 $router->all('/view', function () {
     $Transaction = new Transaction;

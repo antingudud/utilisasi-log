@@ -16,7 +16,7 @@
 
 
         <form action="" method="POST" id="editForm">
-        <button onclick="$('#viewTableForm').load('/util/app/view/Transaction/index.php #indexViewTable')")>
+        <button onclick="$('#viewTableForm').load('/utilisasi-log/app/view/Transaction/index.php #indexViewTable')")>
             Return
         </button>
             <ul>

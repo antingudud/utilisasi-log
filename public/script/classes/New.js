@@ -4,7 +4,7 @@ class New
         document.getElementById("lan").addEventListener("click", function () {
           console.log("SAY WHO");
           let xhr = new XMLHttpRequest();
-          xhr.open("GET", "/util/php_util/insertLan.php");
+          xhr.open("GET", "/utilisasi-log/php_util/insertLan.php");
           xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
               document.getElementById("device").innerHTML = this.responseText;
@@ -17,7 +17,7 @@ class New
         document.getElementById("wan").addEventListener("click", function () {
           console.log("SAY WHO");
           let xhr = new XMLHttpRequest();
-          xhr.open("GET", "/util/php_util/insertWan.php");
+          xhr.open("GET", "/utilisasi-log/php_util/insertWan.php");
           xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
               document.getElementById("device").innerHTML = this.responseText;
@@ -44,7 +44,7 @@ class New
             let action = "newEntry";
     
             request = $.ajax({
-              url: "/util/app/core/AJAXRouter.php",
+              url: "/utilisasi-log/app/core/AJAXRouter.php",
               type: "POST",
               data: {
                 download: download,
