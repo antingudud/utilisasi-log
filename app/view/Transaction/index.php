@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
 require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
+use Josantonius\Session\Session;
 $rows = (new Transaction)->showTransac();
 ?>
 
@@ -11,8 +12,8 @@ $rows = (new Transaction)->showTransac();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="../public/script/main.js"></script>
-    <script src="../public/script/classes/Helper.js"></script>
+    <script src="/utilisasi-log/public/script/main.js"></script>
+    <script src="/utilisasi-log/public/script/classes/Helper.js"></script>
     <title>Home</title>
 </head>
 

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload data</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="../script/classes/New.js">
+    <script src="/utilisasi-log/public/script/classes/New.js">
     </script>
 </head>
 
@@ -31,12 +31,18 @@
                     </select>
                 </li>
                 <li>
+                    <label for="date"></label>
+                    <input type="date" name="date" id="date" value="<?php echo date("Y-m-d",time())?>">
+                </li>
+                <li>
                     <label for="download">download</label>
                     <input type="number" step="any" id="download" name="download" required>
+                    <label for="download">MB</label>
                 </li>
                 <li>
                     <label for="upload">upload</label>
                     <input type="number" step="any" id="upload" name="upload" required>
+                    <label for="upload">MB</label>
                 </li>
                 <li>
                     <button name="submit" id="submit">Submit</button>

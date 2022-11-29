@@ -1,12 +1,14 @@
 <?php
 class View{
+    protected $template;
     public static function render($view){
-        $file = "../app/view/$view";
+        $file = dirname(__DIR__, 1) . "/view/$view";
 
         if(is_readable($file)){
             require $file;
         } else {
-            echo "$file not found";
+            include_once dirname(__DIR__, 1) . "/view/404.php";
+            echo $file . $view;
         }
     }
 }

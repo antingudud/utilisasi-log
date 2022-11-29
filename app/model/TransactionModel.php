@@ -72,7 +72,7 @@ class TransactionModel extends ConnectDB{
         return $result;
     }
 
-    protected function queryTransaction($query, $params, $action, $types = null){
+    protected function queryTransaction($query, $params, $action = null, $types = null){
         $stmt = $this->connectTo()->prepare($query);
         $types = $types ?: str_repeat('s', count($params));
         $stmt->bind_param($types, ...$params);
@@ -83,7 +83,7 @@ class TransactionModel extends ConnectDB{
             return json_encode($result);
         }
         $result = $stmt->get_result();
-        print_r(json_encode($result));
+        return json_encode($result);
         echo ($this->connectTo()->error);
     }
 

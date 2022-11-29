@@ -28,7 +28,7 @@
             <?php $indexList = 0;
             foreach ($rows as $row) : ?>
                 <tr>
-                    <td><?php print $row["dateCreated"]; ?></td>
+                    <td><?php print $row["date"]; ?></td>
                     <td><?php print $row["dl_CR_Indihome"]; ?></td>
                     <td><?php print $row["ul_CR_Indihome"]; ?></td>
                     <td><?php print $row["dl_CP_Indihome"]; ?></td>

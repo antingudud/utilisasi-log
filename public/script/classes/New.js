@@ -40,6 +40,7 @@ class New
     
             let download = $("#download").val();
             let upload = $("#upload").val();
+            let date = $("#date").val();
             let idDevice = $("#device").val();
             let action = "newEntry";
     
@@ -49,6 +50,7 @@ class New
               data: {
                 download: download,
                 upload: upload,
+                date: date,
                 idDevice: idDevice,
                 action: action,
               },

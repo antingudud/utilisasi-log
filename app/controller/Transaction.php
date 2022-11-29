@@ -6,32 +6,53 @@ class Transaction extends TransactionModel{
     public function new(){
         View::render('Transaction/new.php');
     }
-    public function edit(){
+    public function edit(){ 
         View::render('Transaction/update.php');
     }
     public function showTransac(){
         $result = $this->getTransac();
         return $result;
     }
-    public function submitIndex($download, $upload, $idDevice){
-        TransactionModel::setTransac($download, $upload, $idDevice);
+    public function submitIndex($params){
+        $idTrx = substr(uniqid(),5);
+        $username = "dummy";
+        $query = "INSERT INTO transaction(
+                            idTrx,
+                            dateTime,
+                            download,
+                            upload,
+                            userNIK,
+                            dateCreated,
+                            dateModified,
+                            groupId,
+                            idDevice
+                            )
+                    VALUES (
+                        ?,
+                        ?,
+                        ?,
+                        ?,
+                        (SELECT userNIK FROM user WHERE username COLLATE utf8mb4_bin = ?),
+                        now(),
+                        '',
+                        (SELECT groupId FROM user WHERE username COLLATE utf8mb4_bin = ?),
+                        ?
+                        )";
+        TransactionModel::queryTransaction($query, $paramsReqeust = [$idTrx, $params['date'], $params['download'], $params['upload'], $username, $username, $params['idDevice']], $types = "sddssss");
     }
     public function deleteIndex($id){
-        TransactionModel::delTransac($id);
+        $placeholders = str_repeat('?,', count($id) - 1) . '?';
+        $types = str_repeat("s", count($id));
+        $query = "DELETE FROM
+                        transaction
+                    WHERE
+                        idTrx
+                    IN
+                        (" . $placeholders . ")";
+        TransactionModel::queryTransaction($query, $id, $types);
     }
     public function getTransaction($query, $params, $action){
         TransactionModel::queryTransaction($query, $params, $action);
-    }
-    public function transpose($array)
-    {
-      $retData = array();
-    
-        foreach ($array as $row => $columns) {
-          foreach ($columns as $row2 => $column2) {
-              $retData[$row2][$row] = $column2;
-          }
-        }
-      return $retData;
     }
 }
 ?>

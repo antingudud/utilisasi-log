@@ -1,18 +1,19 @@
 <?php
 require_once 'vendor/autoload.php';
-session_start();
+use Josantonius\Session\Session;
 
 $router = new \Bramus\Router\Router();
-
+Session::set("username","guest");
+Session::init(3600);
 // $router = new Router();
 $router->set404(function () {
     header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
     include "app/view/404.php";
 });
 $router->get('/', function() {
-    include "/app/view/Home/index.php";
+    include "app/view/Home/index.php";
 });
-$router->all('/view', function () {
+$router->get('/view', function () {
     $Transaction = new Transaction;
     $Transaction->index();
 });
