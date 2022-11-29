@@ -7,6 +7,7 @@ class ConnectDB
     private $user;
     private $password;
     private $database;
+    private $charset;
     protected $conn;
     function __construct()
     {
@@ -16,6 +17,7 @@ class ConnectDB
         $this->user = $this->configContent->{'user'};
         $this->password = $this->configContent->{'password'};
         $this->database = $this->configContent->{'database'};
+        $this->charset = $this->configContent->{'charset'};
     }
     function connectTo()
     {
@@ -23,6 +25,7 @@ class ConnectDB
         try {
             $this->conn = new mysqli($this->host, $this->user, $this->password, $this->database);
             $this->conn->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
+            $this->conn->set_charset($this->charset);
             return $this->conn;
         } catch (\mysqli_sql_exception $e) {
             throw new \mysqli_sql_exception($e->getMessage(), $e->getCode());

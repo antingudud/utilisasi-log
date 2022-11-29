@@ -1,5 +1,5 @@
 <div>
-    <?php $rows = json_decode($_POST['$arrayData'], true);  ?>
+    <?php $rows = json_decode($_POST['arrayData'], true);  ?>
     <form id="viewTableForm" action="" method="POST">
         <table id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
             <tr>

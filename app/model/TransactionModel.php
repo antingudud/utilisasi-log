@@ -78,45 +78,19 @@ class TransactionModel extends ConnectDB{
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
         if ($action == "select"){
+            $array = Array();
             $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-            print_r (json_encode($result));
-            return json_encode($result);
+            foreach($result as $row)
+            {
+                $array[] = $row;
+            }
+            echo json_encode($array);
         }
         $result = $stmt->get_result();
         return json_encode($result);
         echo ($this->connectTo()->error);
     }
 
-    protected function setTransac($download, $upload, $idDevice){
-        $idTrx = substr(uniqid(),5);
-        $username = "dummy";
-        $sql = "INSERT INTO
-                    transaction(
-                        idTrx,
-                        dateTime,
-                        download,
-                        upload,
-                        userNIK,
-                        dateCreated,
-                        dateModified,
-                        groupId,
-                        idDevice
-                        )
-                VALUES (
-                    ?,
-                    now(),
-                    ?,
-                    ?,
-                    (SELECT userNIK FROM user WHERE username COLLATE utf8mb4_bin = ?),
-                    now(),
-                    '',
-                    (SELECT groupId FROM user WHERE username COLLATE utf8mb4_bin = ?),
-                    ?
-                    )";
-        $stmt = $this->connectTo()->prepare($sql);
-        $stmt->bind_param("sddsss",$idTrx, $download, $upload, $username, $username, $idDevice);
-        $stmt->execute();
-    }
     protected function delTransac($id){
         if(count($id) >= 1){
             $placeholders = str_repeat('?,', count($id) - 1) . '?';

@@ -178,6 +178,7 @@ class Table {
         request = $.ajax({
           url: "/utilisasi-log/app/core/AJAXRouter.php",
           type: "POST",
+          dataType: 'json',
           data: {
             action: "showView"
           },
@@ -186,7 +187,7 @@ class Table {
             console.log("Look changed");
             $("#viewTableForm").load(
               "/utilisasi-log/app/view/Transaction/alternate.php",
-              {$arrayData: response}
+              {arrayData: JSON.stringify(response)}
             );
           },
           error: function () {
