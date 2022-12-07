@@ -6,8 +6,8 @@ class TransactionModel extends ConnectDB{
                     UNIX_TIMESTAMP(dateTime), 
                     device.nameDevice, 
                     category.nameCategory, 
-                    transaction.download, 
-                    transaction.upload,
+                    TRIM(transaction.download)+0 as download, 
+                    TRIM(transaction.upload)+0 as upload,
                     user.fullname,
                     transaction.dateCreated, 
                     transaction.dateModified
@@ -26,7 +26,8 @@ class TransactionModel extends ConnectDB{
                 ON
                     user.userNIK = transaction.userNIK
                 ORDER BY
-                    dateTime
+                    dateTime,
+                    device.nameDevice
                 ASC";
         $stmt = $this->connectTo()->query($sql);
         #$stmt->execute();
@@ -78,18 +79,36 @@ class TransactionModel extends ConnectDB{
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
         if ($action == "select"){
+            header('Content-Type: application/json');
             $array = Array();
             $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             foreach($result as $row)
             {
                 $array[] = $row;
             }
-            echo json_encode($array);
+            return json_encode($array, JSON_NUMERIC_CHECK);
         }
-        $result = $stmt->get_result();
-        return json_encode($result);
-        echo ($this->connectTo()->error);
+        return $stmt;
     }
+
+    protected function prepared_select($query, $params = [], $types = "") {
+        $array = Array();
+        $result = $this->queryTransaction($query, $params, null , $types)->get_result()->fetch_all(MYSQLI_ASSOC);
+        foreach($result as $data)
+        {
+            $array[] = $data;
+        }
+        echo json_encode($array, JSON_NUMERIC_CHECK);
+    }
+
+    function prepared_query($query, $params, $types = "")
+{
+    $types = $types ?: str_repeat("s", count($params));
+    $stmt = $this->connectTo()->prepare($query);
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    return $stmt;
+}
 
     protected function delTransac($id){
         if(count($id) >= 1){
@@ -115,4 +134,3 @@ class TransactionModel extends ConnectDB{
         }
     }
 }
-?>

@@ -1,7 +1,7 @@
 <div>
     <?php $rows = json_decode($_POST['arrayData'], true);  ?>
     <form id="viewTableForm" action="" method="POST">
-        <table id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
+        <table class="striped" id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
             <tr>
                 <td rowspan = "2">Tanggal</td>
                 <td colspan = "2">CR Indihome</td>

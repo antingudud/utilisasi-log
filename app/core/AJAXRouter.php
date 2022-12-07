@@ -19,16 +19,15 @@ switch ($_POST['action']) {
         break;
 
     case "updateEntry":
-        $action = "select";
         $params = $_POST['id'];
         $query = "SELECT idTrx, UNIX_TIMESTAMP(dateTime), category.nameCategory, device.nameDevice, download, upload FROM device RIGHT JOIN transaction ON device.idDevice = transaction.idDevice LEFT JOIN category ON category.idCategory = device.idCategory WHERE idTrx";
         if(count($params) > 1){
             $placeholders = str_repeat('?,', count($params) - 1) . '?';
             $query .= " IN ( {$placeholders} ) ORDER BY dateTime ASC";
-            $contr->getTransaction($query, $params, $action);
+            $contr->select_query($query, $params);
         } else {
             $query .= " = ?";
-            $contr->getTransaction($query, $params, $action);
+            $contr->select_query($query, $params);
         }
         break;
 
@@ -61,7 +60,7 @@ switch ($_POST['action']) {
     case "showView":
         $query = "SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(dateTime), '%a, %e %b %Y') AS date, TRIM(download_CR_Indihome)+0 AS dl_CR_Indihome, TRIM(upload_CR_Indihome)+0 AS ul_CR_Indihome, TRIM(download_CP_Indihome)+0 AS dl_CP_Indihome, TRIM(upload_CP_Indihome)+0 AS ul_CP_Indihome, TRIM(download_PK_Biznet)+0 AS dl_PK_Biznet, TRIM(upload_PK_Biznet)+0 AS ul_PK_Biznet, TRIM(download_PK_Indosat)+0 AS dl_PK_Indosat, TRIM(upload_PK_Indosat)+0 AS ul_PK_Indosat, TRIM(download_CK_Orbit)+0 AS dl_CK_Orbit, TRIM(upload_CK_Orbit)+0 AS ul_CK_Orbit, TRIM(download_CK_XL)+0 AS dl_CK_XL, TRIM(upload_CK_XL)+0 AS ul_CK_XL FROM `util_pivotted` WHERE ? ORDER By dateTime ASC";
         $params = [1];
-        $contr->getTransaction($query, $params, "select");
+        $contr->select_query($query, $params);
         break;
 
     default:

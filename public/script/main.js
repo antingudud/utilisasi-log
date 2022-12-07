@@ -15,14 +15,13 @@ class InPageFunct {
 
           if (idValues.length > 0) {
             console.log(`I am updating ${idValues.length} thing(s)`);
-            let action = "updateEntry";
 
             request = $.ajax({
               url: "/utilisasi-log/app/core/AJAXRouter.php",
               type: "POST",
               data: {
                 id: idValues,
-                action: action,
+                action: "updateEntry",
               },
               cache: false,
               success: function (response) {

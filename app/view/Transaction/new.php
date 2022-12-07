@@ -56,7 +56,7 @@
     <script>
         let ajax = new New();
         ajax.toggleCategory();
-        ajax.formHandler();
+        ajax.insertFormHandler();
     </script>
 </body>
 
