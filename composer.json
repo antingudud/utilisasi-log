@@ -7,6 +7,7 @@
         "classmap": ["classes", "app/core", "app/model", "app/controller", "app/view", "vendor/bramus/router/src/Bramus"],
         "psr-4": {
             "Josantonius\\":"vendor/josantonius"
-        }
+        },
+        "files": ["vendor/jpgraph/jpgraph.php", "vendor/jpgraph/jpgraph_bar.php"]
     }
 }
