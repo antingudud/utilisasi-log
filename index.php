@@ -1,25 +1,34 @@
 <?php
 require_once 'vendor/autoload.php';
 use Josantonius\Session\Session;
+use App\Controller;
+use App\Controller\Home;
 
 $router = new \Bramus\Router\Router();
 Session::set("username","guest");
 Session::init(3600);
+
+define('VIEW_PATH', __DIR__ . "/app/view");
+
 // $router = new Router();
 $router->set404(function () {
     header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
     include "app/view/404.php";
 });
 $router->get('/', function() {
-    include "app/view/Home/index.php";
+    (new Home)->index();
 });
 $router->get('/view', function () {
     $Transaction = new Transaction;
-    $Transaction->index();
+    $Transaction->view('Transaction/index.php');
 });
 $router->get('view/new', function() {
     $Transaction = new Transaction;
-    $Transaction->new();
+    $Transaction->view('Transaction/new.php');
+});
+$router->get('view/report', function() {
+    $Transaction = new Transaction;
+    $Transaction->view('Transaction/report.php');
 });
 
 // $router->add('', ['controller' => 'Home', 'action' => 'index']);

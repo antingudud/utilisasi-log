@@ -1,7 +1,11 @@
 <?php
-class Home extends ConnectDB{
+namespace App\Controller;
+require_once dirname(__DIR__, 2) . "/vendor/autoload.php";
+use App\View;
+
+class Home {
     public function index(){
-        View::render('Home/index.php');
+        return (new View('Home/index'))->render();
     }
 }
 ?>
