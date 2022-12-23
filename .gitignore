@@ -1,4 +1,7 @@
 app/config/config.env
 vendor/
+public/TODO
 .vscode/
 bfg-1.14.0.jar
+public/texto.txt
+public/TODO

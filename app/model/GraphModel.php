@@ -1,5 +1,7 @@
 <?php
-require_once dirname(__DIR__, 2) . "/vendor/autoload.php";
+namespace App\Model;
+use App\Model\Transaction\TransactionModel;
+// require_once dirname(__DIR__, 2) . "/vendor/autoload.php";
 class GraphModel extends TransactionModel {
 
     protected function gatherData($idDevice, $year, $desiredMonth, $range = "") {
@@ -24,41 +26,5 @@ class GraphModel extends TransactionModel {
         $nameDevice = $data['nameDevice'];
 
         return [$date, $nameDevice, $download, $upload];
-    }
-
-    protected function drawBarChart($idDevice, $year, $desiredMonth, $range = "") {
-        list($date, $nameDevice, $download, $upload) = $this->prepareData($idDevice, $year, $desiredMonth, $range);
-        $width = 800 ; $height = 800;
-        if($range == "semester") {
-            $width = 2800 ; $height = 800;
-        }
-        $graph = new Graph($width, $height);
-        
-        $graph->SetScale('textlin');
-        $graph->title->Set($nameDevice);
-        $graph->xaxis->title->Set('Tanggal');
-        
-        $graph->xaxis->SetTickLabels($date);
-        $graph->xaxis->SetLabelAngle(45);
-        $graph->yaxis->title->Set('Penggunaan (MB)');
-
-        $downloadBarPlot = new BarPlot($download);
-        $downloadBarPlot->SetLegend('Download');
-
-        $uploadBarPlot = new BarPlot($upload);
-        $uploadBarPlot->SetLegend('Upload');
-
-        $groupedBarPlot = new GroupBarPlot(Array( $downloadBarPlot, $uploadBarPlot));
-        $graph->legend->SetFrameWeight(1);
-        $graph->legend->SetColumns(2);
-        $graph->legend->SetPos(0.5,0.05,'center', 'top');
-        $graph->Add($groupedBarPlot);
-        $downloadBarPlot->value->Show();
-        $uploadBarPlot->value->Show();
-        $downloadBarPlot->value->SetAngle(90);
-        $uploadBarPlot->value->SetAngle(90);
-        $downloadBarPlot->SetValuePos("center");
-        $uploadBarPlot->SetValuePos("center");
-        $graph->Stroke();
     }
 }

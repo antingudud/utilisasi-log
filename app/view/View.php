@@ -1,21 +1,39 @@
 <?php
-namespace App;
-class View {
+namespace App\View;
+class View{
     protected string $view;
-    protected array $params = [];
-    function __construct(string $view, array $params = [])
+    protected Array $params = [];
+
+    public function __construct(String $view, array $params =[])
     {
+        $this->params = $params;
         $this->view = $view;
-        $this->params = $params;       
     }
-    public function render ()
-    {
-        $viewPath = VIEW_PATH . "/" . $this->view . ".php";
+    public function render(){
+        $viewPath = VIEW_PATH . '/' . $this->view . '.php';
+
         if(!is_readable($viewPath)){
-            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-            include VIEW_PATH . "/404.php";
-            return;
+            return include_once VIEW_PATH . '/404.php';
         }
-        include $viewPath;
+        $layoutContent = $this->layoutContent();
+        $viewContent = $this->renderOnlyView();
+        return str_replace('{{content}}', $viewContent, $layoutContent);
     }
+
+    protected function layoutContent()
+    {
+        ob_start();
+        $viewPath = VIEW_PATH . '/' . 'resources/main' . '.php';
+        include_once $viewPath;
+        return ob_get_clean();
+    }
+    protected function renderOnlyView()
+    {
+        ob_start();
+        $viewPath = VIEW_PATH . '/' . $this->view . '.php';
+        include_once $viewPath;
+        return ob_get_clean();
+    }
+
 }
+?>

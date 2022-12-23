@@ -1,8 +1,8 @@
 <?php
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
-$sus = new Chart();
+use App\View\Chart;
 $idDevice = $_GET['idDevice'];
-$selectedTime = $_GET['selectedTime'];
+(int)$selectedTime = $_GET['selectedTime'];
 $range = $_GET['range'];
-$year = $_GET['year'];
-$sus->getChart($idDevice,$year, $selectedTime, $range);
+(int)$year = $_GET['year'];
+(new Chart($idDevice, $year, $selectedTime, $range))->drawChart();

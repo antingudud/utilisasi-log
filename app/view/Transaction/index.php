@@ -3,7 +3,7 @@
 require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
 
 $Transact = new Transaction;
-$rows = $Transact->get_prepared_query("SELECT idTrx, DATE_FORMAT(dateTime, '%a, %e %b %Y') AS date, device.nameDevice, category.nameCategory, TRIM(transaction.download)+0 as download, TRIM(transaction.upload)+0 as upload, user.fullname, transaction.dateCreated, transaction.dateModified FROM device RIGHT JOIN transaction ON device.idDevice = transaction.idDevice LEFT JOIN category ON category.idCategory = device.idCategory LEFT JOIN user ON user.userNIK = transaction.userNIK WHERE 1 = ? ORDER BY dateTime, device.nameDevice ASC", [1])->get_result()->fetch_all(MYSQLI_ASSOC);
+$rows = $Transact->getMainTable();
 ?>
 
 <html lang="en">

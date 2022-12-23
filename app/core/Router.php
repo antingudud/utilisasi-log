@@ -1,4 +1,5 @@
 <?php
+use App\Core\ConnectDB;
 class Router extends ConnectDB{
     protected $routes = [];
     protected $params = [];
