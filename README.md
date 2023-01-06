@@ -1,5 +1,7 @@
-My attempt at diving face first into the advanced programming ways or whatnot using PHP and AJAx.
+Utility website to record a company's bandwidth usage and view monthly or biannual usage.
 
-So far I've applied the OOP paradigm and MVC pattern. As for the functionalities it self, it's still pretty lacking because I focused only on the aforementioned methods first.
+This is a project where I apply my study on OOP, MVC architecture, and patterns I learned.
 
-I'll eventually add CRUD, sessions, users, multi level access, exception handler, graphic charts, etc later.
+So far, I've applied Dependency Injection, Fat Model-Thin Controller, Data Mapper, Repository, Domain Object, and Service Layer.
+
+My current goal is to polish the app, add pagination, enhance my understanding of the above concepts, learn new concepts, and apply them correctly.
