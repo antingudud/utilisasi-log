@@ -101,7 +101,7 @@ class OptionsMapper
 
     public function findByCategory(String $category)
     {
-        return $this->select(['device.nameDevice', 'device.idDevice'], "device LEFT JOIN category ON device.idCategory = category.idCategory", ["category.nameCategory" => $category])->fetch_all(MYSQLI_ASSOC);
+        return $this->select(['device.nameDevice', 'device.idDevice'], "device LEFT JOIN category ON device.idCategory = category.idCategory", ["category.nameCategory" => $category], "", "ORDER BY FIELD(nameDevice, 'CR (Indihome)', 'CP (Indihome)', 'PK (Biznet)', 'PK (Indosat)', 'CK (Orbit)', 'CK (XL)')")->fetch_all(MYSQLI_ASSOC);
     }
 
     function __destruct()

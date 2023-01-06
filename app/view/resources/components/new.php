@@ -76,9 +76,14 @@
                         upload: upload
                     },
                     success: function(response) {
-                        console.log(response)
+                        $('#device').val('')
+                        $('#download').val('')
+                        $('#upload').val('')
                     },
                     error: function(xhr, status, response) {
+                        $('#device').val('')
+                        $('#download').val('')
+                        $('#upload').val('')
                         if(xhr.status === 400) {
                             var errorMessage = JSON.parse(xhr.responseText).error;
                             console.error(errorMessage)

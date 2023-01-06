@@ -16,6 +16,7 @@ CREATE OR REPLACE VIEW util_correct_form AS (
     LEFT JOIN
     device
 	ON transaction.idDevice = device.idDevice
+    ORDER BY dateTime ASC
 );
 SELECT * FROM util_correct_form;
 
@@ -34,10 +35,59 @@ CREATE OR REPLACE VIEW util_pivotted AS
     SUM(download_CK_Orbit) AS download_CK_Orbit,
     SUM(upload_CK_Orbit) AS upload_CK_Orbit,
     SUM(download_CK_XL) AS download_CK_XL,
-    SUM(upload_CK_XL) upload_CK_XL
+    SUM(upload_CK_XL) AS upload_CK_XL
     FROM util_correct_form
-    GROUP BY dateCreated
+    GROUP BY FROM_UNIXTIME(UNIX_TIMESTAMP(dateTime), '%a, %e %b %Y')
 );
 SELECT * FROM util_pivotted;
 
+CREATE OR REPLACE VIEW util_pivotted_pretty AS
+(
+    SELECT
+    dateTime, dateCreated,
+    COALESCE(download_CR_Indihome, 0) AS download_CR_Indihome,
+    COALESCE(upload_CR_Indihome, 0) AS upload_CR_Indihome,
+    COALESCE(download_CP_Indihome, 0) AS download_CP_Indihome,
+    COALESCE(upload_CP_Indihome, 0) AS upload_CP_Indihome,
+
+    COALESCE(download_PK_Biznet, 0) AS download_PK_Biznet,
+    COALESCE(upload_PK_Biznet, 0) AS upload_PK_Biznet,
+    COALESCE(download_PK_Indosat, 0) AS download_PK_Indosat,
+    COALESCE(upload_PK_Indosat, 0) AS upload_PK_Indosat,
+
+    COALESCE(download_CK_Orbit, 0) AS download_CK_Orbit,
+    COALESCE(upload_CK_Orbit, 0) AS upload_CK_Orbit,
+    COALESCE(download_CK_XL, 0) AS download_CK_XL,
+    COALESCE(upload_CK_XL, 0) AS upload_CK_XL
+    FROM util_pivotted
+);
+SELECT * FROM util_pivotted_pretty
+
 SELECT dateCreated, TRIM(download_CR_Indihome)+0 AS dl_CR_Indihome, TRIM(upload_CR_Indihome)+0 AS ul_CR_Indihome, TRIM(download_CP_Indihome)+0 AS dl_CP_Indihome, TRIM(upload_CP_Indihome)+0 AS ul_CP_Indihome, TRIM(download_PK_Biznet)+0 AS dl_PK_Biznet, TRIM(upload_PK_Biznet)+0 AS ul_PK_Biznet, TRIM(download_PK_Indosat)+0 AS dl_PK_Indosat, TRIM(upload_PK_Indosat)+0 AS ul_PK_Indosat, TRIM(download_CK_Orbit)+0 AS dl_CK_Orbit, TRIM(upload_CK_Orbit)+0 AS ul_CK_Orbit, TRIM(download_CK_XL)+0 AS dl_CK_XL, TRIM(upload_CK_XL)+0 AS ul_CK_XL FROM `util_pivotted`
+
+SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(dateTime), '%a, %e %b %Y') AS date, TRIM(download_CR_Indihome)+0 AS dl_CR_Indihome, TRIM(upload_CR_Indihome)+0 AS ul_CR_Indihome, TRIM(download_CP_Indihome)+0 AS dl_CP_Indihome, TRIM(upload_CP_Indihome)+0 AS ul_CP_Indihome, TRIM(download_PK_Biznet)+0 AS dl_PK_Biznet, TRIM(upload_PK_Biznet)+0 AS ul_PK_Biznet, TRIM(download_PK_Indosat)+0 AS dl_PK_Indosat, TRIM(upload_PK_Indosat)+0 AS ul_PK_Indosat, TRIM(download_CK_Orbit)+0 AS dl_CK_Orbit, TRIM(upload_CK_Orbit)+0 AS ul_CK_Orbit, TRIM(download_CK_XL)+0 AS dl_CK_XL, TRIM(upload_CK_XL)+0 AS ul_CK_XL FROM `util_pivotted` ORDER BY dateTime ASC
+FROM_UNIXTIME(UNIX_TIMESTAMP(dateTime), '%e')
+
+SELECT DAYOFMONTH(dateTime) as date, MONTH(dateTime) as month, device.nameDevice, TRIM(download)+0 AS download, TRIM(upload)+0 AS upload FROM device RIGHT JOIN transaction ON  device.idDevice = transaction.idDevice ORDER BY dateTime ASC
+
+SELECT
+	FROM_UNIXTIME(UNIX_TIMESTAMP(dateTime), '%e') as dateTime,
+    device.nameDevice,
+    TRIM(download)+0 AS download,
+    TRIM(upload)+0 AS upload
+FROM
+	device
+RIGHT JOIN
+	transaction
+ON 
+	device.idDevice = transaction.idDevice
+WHERE 
+	nameDevice = 'CP (Indihome)'
+GROUP BY
+	dateTime
+ORDER BY
+	dateTime
+ASC
+
+// Select arrays of download and upload from a semester
+SELECT DAYOFMONTH(dateTime) as date, IF(MONTH(dateTime) < 7, 1, 2) as semester, MONTH(dateTime) as month, device.nameDevice, TRIM(download)+0 AS download, TRIM(upload)+0 AS upload FROM device RIGHT JOIN transaction ON  device.idDevice = transaction.idDevice WHERE device.idDevice = '43ert2sf' HAVING semester = 1 ORDER BY dateTime ASC

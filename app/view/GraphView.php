@@ -18,15 +18,8 @@ class Chart extends GraphModel{
         $this->width = 800;
         $this->height = 800;
     }
-    public function checkSelectedTime(){
-        if($this->range == "semester") {
-            $this->width = 2800;
-            $this->height = 800;
-        }
-    }
     public function drawChart(){
         list($date, $nameDevice, $download, $upload) = (new GraphModel)->prepareData($this->idDevice, $this->year, $this->selectedTime, $this->range);
-        $this->checkSelectedTime();
         $graph = new \Graph($this->width,$this->height);
         $graph->SetScale('textlin');
         $graph->title->Set($nameDevice);

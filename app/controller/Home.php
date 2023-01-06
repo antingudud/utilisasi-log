@@ -2,8 +2,15 @@
 namespace App\Controller;
 require_once dirname(__DIR__, 2) . "/vendor/autoload.php";
 use App\View\View;
+use App\Core\ConnectDB;
+use App\Core\Database\AdapterInterface;
+use App\Core\Database\MysqliAdapter;
+use App\Model\DeviceService;
 use App\Model\Device;
-use App\Model\Transac;
+use App\Model\Mapper\Transaction\Mapper;
+use App\Model\Repository\Transaction\Repo;
+use App\Model\TransacService;
+use App\Model\TransacModel;
 
 class Home {
     public function index(){
@@ -19,16 +26,41 @@ class Home {
         $View = (new View('resources/components/table', $params));
         return $View->render();
     }
+    public function new()
+    {
+        $View = (new View('resources/components/new'));
+        return $View->render();
+    }
     public function update(Array $id)
     {
-        $deviceList = (new Device)->getEditList($id);
+        $errors = [];
+        foreach ($id['id'] as $key => $value) {
+            if (empty($value) || strlen($value) > 8 || !preg_match('/^[a-zA-Z0-9]+$/', $value)) {
+                $errors = ['error' => 'Invalid device ID'];
+            }
+        }
+        if (!empty($errors)) {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(['error' => 'Invalid device ID']);
+            return;
+        }
+
+        $deviceList = (new DeviceService)->getEditList($id);
         $View = (new View('resources/components/update', ['deviceList' => $deviceList]));
         return $View->render();
     }
     public function alter()
     {
-        $logData = (new Transac)->getAlterForm();
+        $transac = new Mapper(new MysqliAdapter(new ConnectDB));
+        $repo = new Repo($transac);
+        $logData = (new TransacService($repo))->getAlterForm();
         $View = (new View('resources/components/alter', ['log' => $logData]));
+        return $View->render();
+    }
+    public function report()
+    {
+        $content = "";
+        $View = (new View('resources/components/report', ['content' => $content, 'month' => ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'], 'semester' => ['Semester 1', 'Semester 2']]));
         return $View->render();
     }
 }

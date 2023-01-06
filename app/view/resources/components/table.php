@@ -3,25 +3,30 @@ $data = $this->params['content'];
 $header = $this->params['header'];
 $body = $this->params['body'];
 ?>
-<section class="row">
+<!-- <section class="row" style="position: sticky; top: 0;">
 
-<button class="button"><a href="/utilisasi-log/view/new">Upload data</a></button>
-<button class="button">Category</button>
-<select name="device" id="device" required>
-    <option hidden disabled selected value>Sort by</option>
-    <option>Date</option>
-</select>
-<button class="button" name="refreshViewIndex" id="refreshViewIndex">Refresh</button>
-<button class="button" name="alternateTableLook" id="alternateTableLook">Alternate Look</button>
-<button class="button" name="chartReport" id="chartReport"><a href="view/report">Report</a></button>
 
-</section>
+
+</section> -->
 
 <form id="viewTableForm" action="" method="POST">
     <table class="striped" id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
         <tr>
+        <th colspan="9" style="background: white; position: sticky; top: 0;">
+                <button class="button"><a href="/utilisasi-log/view/new">Upload data</a></button>
+                <button class="button">Category</button>
+                <select name="device" id="device">
+                    <option hidden disabled selected value>Sort by</option>
+                    <option>Date</option>
+                </select>
+                <button class="button" name="refreshViewIndex" id="refreshViewIndex">Refresh</button>
+                <button class="button" name="alternateTableLook" id="alternateTableLook">Alternate Look</button>
+                <button class="button" name="chartReport" id="chartReport"><a href="/utilisasi-log/view/report">Report</a></button>
+            </th>
+        </tr>
+        <tr>
             <?php foreach ($header as $key => $value) : ?>
-                <th><?php print_r($value) ?></th>
+                <th style="background: white; position: sticky; top: 140px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);"><?php print_r($value) ?></th>
             <?php endforeach; ?>
         </tr>
         <?php foreach ($body as $key => $value) : ?>
@@ -97,7 +102,7 @@ $body = $this->params['body'];
                         cache: false,
                         success: function(response)
                         {
-                            console.log(response)
+                            $('body').load('/utilisasi-log/view')
                         },
                         error: function(xhr, status, response)
                         {

@@ -6,102 +6,53 @@ use App\Core\ConnectDB;
 
 class Device
 {
+    private $idDevice;
+    private $idCategory;
+    private $nameDevice;
+
+    public function setIdDevice(String $id)
+    {
+        $this->idDevice = $id;
+        return $this;
+    }
+    public function getIdDevice()
+    {
+        return $this->idDevice;
+    }
+
+    public function setIdCategory(String $id)
+    {
+        $this->idCategory = $id;
+        return $this;
+    }
+    public function getIdCategory()
+    {
+        return $this->idCategory;
+    }
+
+    public function setName(String $name)
+    {
+        $this->nameDevice = $name;
+        return $this;
+    }
+    public function getName()
+    {
+        return $this->nameDevice;
+    }
+
+
     public function getTransaction()
     {
         return (new DeviceService)->getTransaction();
     }
 
-    public function log(Int $download, Int $upload, $date, String $idDevice)
-    {
-        if (empty($download) || !is_numeric($download)) {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode(['error' => 'invalid download value']);
-            return;
-        }
-
-        if (empty($upload) || !is_numeric($upload)) {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode(['error' => 'invalid upload value']);
-            return;
-        }
-
-        if (empty($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode(['error' => 'invalid date value']);
-            return;
-        }
-
-        if (empty($idDevice) || strlen($idDevice) > 8 || !preg_match('/^[a-zA-Z0-9]+$/', $idDevice)) {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode(['error' => 'Invalid device ID']);
-            return;
-        }
-        return (new DeviceService)->log($download, $upload, $date, $idDevice);
-    }
-
-    public function delete(array $id)
-    {
-        $errors = [];
-        foreach ($id as $key => $value) {
-            if (empty($value) || strlen($value) > 8 || !preg_match('/^[a-zA-Z0-9]+$/', $value)) {
-                $errors = ['error' => 'Invalid device ID'];
-            }
-        }
-        if (!empty($errors)) {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode(['error' => 'Invalid device ID']);
-            return;
-        }
-        $Newid = array_map(function ($value) {
-            return ['idTrx' => $value];
-        }, $id);
-        return (new DeviceService)->delete($Newid);
-    }
-
     public function update(Array $list)
     {
-        $errors = [];
-        foreach ($list as $key => $value) {
-            if (empty($value['idTrx']) || strlen($value['idTrx']) > 8 || !preg_match('/^[a-zA-Z0-9]+$/', $value['idTrx'])) {
-                $errors = ['error' => 'Invalid device ID'];
-            }
-        }
-        foreach ($list as $ses => $sos) {
-            if (!is_numeric($sos['download']) || empty($sos['download'])) {
-                $errors = ['error' => 'Invalid download values'];
-            }
-        }
-        foreach ($list as $sis => $sas) {
-            if (!is_numeric($sas['upload']) || empty($sas['upload'])) {
-                $errors = ['error' => 'Invalid upload values'];
-            }
-        }
-        if (!empty($errors)) {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode($errors);
-            return;
-        }
         return (new DeviceService)->update($list);
-    }
-
-    public function getEditList(array $id)
-    {
-        $errors = [];
-        foreach ($id['id'] as $key => $value) {
-            if (empty($value) || strlen($value) > 8 || !preg_match('/^[a-zA-Z0-9]+$/', $value)) {
-                $errors = ['error' => 'Invalid device ID'];
-            }
-        }
-        if (!empty($errors)) {
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode(['error' => 'Invalid device ID']);
-            return;
-        }
-        return (new DeviceService)->getEditList($id['id']);
     }
 }
 
-
+use App\Model\Transac;
 class DeviceService
 {
     private $mapper;
@@ -109,21 +60,6 @@ class DeviceService
     function __construct()
     {
         $this->mapper = (new DeviceMapper);
-    }
-
-    public function delete(array $id)
-    {
-        return $this->mapper->deleteById($id);
-    }
-
-    public function log(Int $download, Int $upload, $date, String $idDevice)
-    {
-        $idTrx = substr(uniqid(), 5);
-        $username = "dummy";
-        $userNIK = $this->mapper->select(['userNIK'], 'user', ['username' => $username])->fetch_row()[0];
-        $groupId = $this->mapper->select(['groupId'], 'user', ['username' => $username])->fetch_row()[0];
-        $dateCreated = date('Y-m-d H:i:s');
-        return $this->mapper->insert("transaction", ['idTrx' => $idTrx, 'dateTime' => $date, 'download' => $download, 'upload' => $upload, 'userNIK' => $userNIK, 'dateCreated' => $dateCreated, 'dateModified' => '', 'groupId' => $groupId, 'idDevice' => $idDevice]);
     }
 
     public function update(Array $list)
@@ -137,7 +73,7 @@ class DeviceService
     }
     public function getEditList(array $id)
     {
-        return $this->mapper->getEditList($id);
+        return $this->mapper->getEditList($id['id']);
     }
 }
 

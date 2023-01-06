@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Model\Device;
+use App\Model\TransacService;
 
 class SubmitContr
 {
     protected $data;
+    private $device;
+    private $service;
 
     function __construct(array $POST)
     {
@@ -35,21 +38,35 @@ class SubmitContr
             return htmlspecialchars($value);
         }, $this->data);
     }
+
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
+
+    public function setModel($model)
+    {
+        $this->device = $model;
+    }
+
     public function log()
     {
-        $download = intval($this->data['download']);
-        $upload = intval($this->data['upload']);
-        $date = $this->data['date'];
+        $download = floatval($this->data['download']);
+        $upload = floatval($this->data['upload']);
+        $date = strval($this->data['date']);
         $idDevice = strval($this->data['idDevice']);
 
-        return (new Device)->log($download, $upload, $date, $idDevice);
+        return $this->service->log($download, $upload, $date, $idDevice);
     }
     public function delete()
     {
-        return (new Device)->delete($this->data['id']);
+        $id = $this->data['id'];
+        return $this->service->delete($id);
     }
     public function edit()
     {
-        return (new Device)->update($this->data);
+        $list = $this->data;
+
+        return $this->service->update($list);
     }
 }
