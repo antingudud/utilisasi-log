@@ -4,14 +4,7 @@ namespace App\Model\Service\Update;
 use App\Model\Repository\Transaction\Repo;
 use App\Model\Repository\User\Repo as RepoUser;
 use App\Model\Transaction\Exception\InvalidValue;
-
-interface UpdateInterface
-{
-    public function __construct(Repo $transac);
-    public function setUser(RepoUser $usr);
-    public function update(Array $list);
-    public function validate(Array $list);
-}
+use App\Model\Service\Update\UpdateInterface;
 
 class Update implements UpdateInterface
 {

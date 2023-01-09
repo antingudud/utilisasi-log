@@ -2,13 +2,7 @@
 namespace App\Model\Mapper\User;
 use App\Core\Database\AdapterInterface;
 use App\Model\User\User;
-
-interface UsrMapperInterface
-{
-    public function find(Array $filter = [], $one = FALSE);
-    public function createUser(Array $row);
-    public function createUserCollection(Array $rows);
-}
+use App\Model\Mapper\User\UsrMapperInterface;
 
 class UserMapper implements UsrMapperInterface
 {

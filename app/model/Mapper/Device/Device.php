@@ -2,12 +2,7 @@
 namespace App\Model\Mapper\Device;
 use App\Core\Database\AdapterInterface;
 use App\Model\Device;
-
-interface DvcInterface
-{
-    public function createDevice(Array $row);
-    public function find(Array $filter, $one = FALSE);
-}
+use App\Model\Mapper\Device\DvcInterface;
 
 class DeviceMapper implements DvcInterface
 {
