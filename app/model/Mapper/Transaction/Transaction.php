@@ -14,9 +14,10 @@ class Mapper
     private $device;
     private $transactionCollection;
 
-    public function __construct(AdapterInterface $db)
+    public function setAdapter(AdapterInterface $db)
     {
         $this->db = $db;
+        return $this;
     }
 
     public function setUserMapper(UsrMapperInterface $usr)

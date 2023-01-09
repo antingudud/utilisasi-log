@@ -1,14 +1,15 @@
 <?php
 namespace App\Model\Repository\User;
 use App\Model\User\User;
-use App\Model\Mapper\User\UserMapper;
+use App\Model\Mapper\User\UsrMapperInterface;
 
 class Repo
 {
     private $mapper;
-    public function __construct(UserMapper $usr)
+    public function setMapper(UsrMapperInterface $usr)
     {
         $this->mapper = $usr;
+        return $this;
     }
 
     public function findByUsername(String $username)

@@ -10,9 +10,10 @@ class Log
     private $user;
     private $repo;
 
-    function __construct(Repo $transac)
+    public function setRepo(Repo $transac)
     {
         $this->repo = $transac;
+        return $this;
     }
     public function setUser(RepoUser $usr)
     {

@@ -8,9 +8,10 @@ class DeviceMapper implements DvcInterface
 {
     private $db;
 
-    public function __construct(AdapterInterface $adapter)
+    public function setAdapter(AdapterInterface $adapter)
     {
         $this->db = $adapter;
+        return $this;
     }
 
     public function find(Array $filter, $one = FALSE)

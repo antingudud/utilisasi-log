@@ -6,9 +6,10 @@ use App\Core\Database\AdapterInterface;
 class MysqliAdapter implements AdapterInterface
 {
     private $db;
-    public function __construct(ConnectDB $db)
+    public function setConnection(ConnectDB $db)
     {
         $this->db = $db->connectTo();
+        return $this;
     }
 
     public function beginTransaction()

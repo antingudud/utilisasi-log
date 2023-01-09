@@ -18,7 +18,7 @@ class DrawChart implements DrawChartInterface
     private $download;
     private $upload;
     
-    public function __construct(string $idDevice, int $year, int $selectedTime, string $range = "")
+    public function setValues(string $idDevice, int $year, int $selectedTime, string $range = "")
     {
         $this->idDevice = $idDevice;
         $this->year = $year;
@@ -26,6 +26,7 @@ class DrawChart implements DrawChartInterface
         $this->range = $range;
         $this->width = 800;
         $this->height = 800;
+        return $this;
     }
 
     public function setRepo(Repo $repo)

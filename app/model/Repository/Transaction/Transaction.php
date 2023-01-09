@@ -11,9 +11,10 @@ class Repo
     private $mapper;
     private $device;
 
-    public function __construct(Mapper $mp)
+    public function setMapper(Mapper $mp)
     {
         $this->mapper = $mp;
+        return $this;
     }
     public function setDeviceRepo(DeviceRepo $repo)
     {

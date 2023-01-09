@@ -7,9 +7,10 @@ use App\Model\Mapper\User\UsrMapperInterface;
 class UserMapper implements UsrMapperInterface
 {
     private $db;
-    public function __construct(AdapterInterface $db)
+    public function setAdapter(AdapterInterface $db)
     {
         $this->db = $db;
+        return $this;
     }
 
     public function find(Array $filter = [], $one = FALSE)
