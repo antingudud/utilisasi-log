@@ -3,14 +3,12 @@ namespace App\Controller;
 require_once dirname(__DIR__, 2) . "/vendor/autoload.php";
 use App\View\View;
 use App\Core\ConnectDB;
-use App\Core\Database\AdapterInterface;
 use App\Core\Database\MysqliAdapter;
 use App\Model\DeviceService;
 use App\Model\Device;
 use App\Model\Mapper\Transaction\Mapper;
 use App\Model\Repository\Transaction\Repo;
 use App\Model\TransacService;
-use App\Model\TransacModel;
 
 class Home {
     public function index(){
@@ -51,8 +49,13 @@ class Home {
     }
     public function alter()
     {
-        $transac = new Mapper(new MysqliAdapter(new ConnectDB));
-        $repo = new Repo($transac);
+        $db = new ConnectDB;
+        $adapter = new MysqliAdapter;
+        $adapter->setConnection($db);
+        $transac = new Mapper;
+        $transac->setAdapter($adapter);
+        $repo = new Repo;
+        $repo->setMapper($transac);
         $logData = (new TransacService($repo))->getAlterForm();
         $View = (new View('resources/components/alter', ['log' => $logData]));
         return $View->render();

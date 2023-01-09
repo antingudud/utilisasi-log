@@ -130,10 +130,6 @@ class Repo
 
     public function create(Array $rows = [])
     {
-        if($rows['idTrx'])
-        {
-            return $this->mapper->find(['idTrx' => $rows['idTrx']], true);
-        }
         $tr = new Transac();
         $id = substr(uniqid(), 5);
         
