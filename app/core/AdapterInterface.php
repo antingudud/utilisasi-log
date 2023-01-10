@@ -1,12 +1,8 @@
 <?php
 namespace App\Core\Database;
 
-use App\Core\ConnectDB;
-
 interface AdapterInterface
 {
-    public function setConnection(ConnectDB $db);
-
     public function beginTransaction();
     public function commitTransaction();
     public function rollbackTransaction();

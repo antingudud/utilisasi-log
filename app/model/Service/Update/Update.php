@@ -11,10 +11,9 @@ class Update implements UpdateInterface
     private $user;
     private $repo;
 
-    public function setRepo(Repo $transac)
+    function __construct(Repo $transac)
     {
         $this->repo = $transac;
-        return $this;
     }
     public function setUser(RepoUser $usr)
     {

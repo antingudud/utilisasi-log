@@ -6,11 +6,11 @@ use App\Model\Device;
 class DeviceRepo
 {
     private $mapper;
-    public function setMapper(DvcInterface $mapper)
+    public function __construct(DvcInterface $mapper)
     {
         $this->mapper = $mapper;
-        return $this;
     }
+
     public function create(String $idDevice)
     {
         return $this->mapper->find(['idDevice' => $idDevice], true);

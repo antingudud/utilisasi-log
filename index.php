@@ -16,22 +16,22 @@ use App\Core\ConnectDB;
 use App\Model\Service\Delete\Delete;
 use App\Model\Service\Update\Update;
 
-$sqladapter = new MysqliAdapter();
-$sqladapter->setConnection(new ConnectDB);
+$sqladapter = new MysqliAdapter(new ConnectDB);
+$mapperTr = new Mapper($sqladapter);
+$mapperUsr = new UserMapper($sqladapter);
+$mapperDvc = new DeviceMapper($sqladapter);
 
-$mapperTr = new Mapper();
-$mapperTr->setAdapter($sqladapter);
-$mapperUsr = new UserMapper();
-$mapperUsr->setAdapter($sqladapter);
-$mapperDvc = new DeviceMapper();
-$mapperDvc->setAdapter($sqladapter);
-
-$repoUser = new RepoUser();
-$dvcrepo = new DeviceRepo();
-$repoTr = new Repo();
-$logserv = new Log();
-$updateserv = new Update();
+$repoUser = new RepoUser($mapperUsr);
+$dvcrepo = new DeviceRepo($mapperDvc);
+$repoTr = new Repo($mapperTr);
+$repoTr->setDeviceRepo($dvcrepo);
+$trserv = new TransacService($repoTr);
+$trserv->setUser($repoUser);
+$logserv = new Log($repoTr);
+$logserv->setUser($repoUser);
+$updateserv = new Update($repoTr);
 $delserv = new Delete;
+$delserv->setRepo($repoTr);
 
 $mapperTr->setUserMapper($mapperUsr);
 $mapperTr->setDeviceMapper($mapperDvc);
@@ -55,31 +55,22 @@ $router->get('/view', function () use($Home) {
 $router->get('view/new', function() use($Home) {
     echo $Home->new();
 });
-$router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv, $delserv, $mapperTr, $mapperDvc, $mapperUsr, $repoTr, $repoUser, $dvcrepo) {
-    $repoTr->setMapper($mapperTr);
-    $repoUser->setMapper($mapperUsr);
-    $dvcrepo->setMapper($mapperDvc);
-    $repoTr->setDeviceRepo($dvcrepo);
-
-    $router->post('/log', function() use ($logserv, $repoTr, $repoUser) {
+$router->mount('/submit', function() use ($router, $Home, $trserv, $logserv, $updateserv, $delserv) {
+    $router->post('/log', function() use ($logserv) {
         $submit = new SubmitContr($_POST);
-        $logserv->setRepo($repoTr);
-        $logserv->setUser($repoUser);
         $submit->setService($logserv);
         return $submit->log();
     });
     $router->post('/update', function() use($Home) {
         echo ( $Home->update($_POST) );
     });
-    $router->post('/delete', function() use($delserv, $repoTr) {
+    $router->post('/delete', function() use($delserv) {
         $submit = new SubmitContr($_POST);
-        $delserv->setRepo($repoTr);
         $submit->setService($delserv);
         return $submit->delete();
     });
-    $router->post('/edit', function() use ($updateserv, $repoTr, $repoUser) {
+    $router->post('/edit', function() use ($updateserv) {
         $submit = new SubmitContr($_POST['id']);
-        $updateserv->setRepo($repoTr)->setUser($repoUser);
         $submit->setService($updateserv);
         return $submit->edit();
     });
