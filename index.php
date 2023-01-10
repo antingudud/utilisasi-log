@@ -27,11 +27,9 @@ $repoTr = new Repo($mapperTr);
 $repoTr->setDeviceRepo($dvcrepo);
 $trserv = new TransacService($repoTr);
 $trserv->setUser($repoUser);
-$logserv = new Log($repoTr);
-$logserv->setUser($repoUser);
+$logserv = new Log($repoTr, $repoUser);
 $updateserv = new Update($repoTr);
-$delserv = new Delete;
-$delserv->setRepo($repoTr);
+$delserv = new Delete($repoTr);
 
 $mapperTr->setUserMapper($mapperUsr);
 $mapperTr->setDeviceMapper($mapperDvc);

@@ -49,13 +49,9 @@ class Home {
     }
     public function alter()
     {
-        $db = new ConnectDB;
-        $adapter = new MysqliAdapter;
-        $adapter->setConnection($db);
-        $transac = new Mapper;
-        $transac->setAdapter($adapter);
-        $repo = new Repo;
-        $repo->setMapper($transac);
+        $adapter = new MysqliAdapter(new ConnectDB);
+        $transac = new Mapper($adapter);;
+        $repo = new Repo($transac);
         $logData = (new TransacService($repo))->getAlterForm();
         $View = (new View('resources/components/alter', ['log' => $logData]));
         return $View->render();

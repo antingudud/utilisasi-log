@@ -6,7 +6,6 @@ use App\Model\Repository\User\Repo as RepoUser;
 interface UpdateInterface
 {
     public function __construct(Repo $transac);
-    public function setUser(RepoUser $usr);
     public function update(Array $list);
     public function validate(Array $list);
 }

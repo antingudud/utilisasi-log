@@ -8,17 +8,11 @@ use App\Model\Service\Update\UpdateInterface;
 
 class Update implements UpdateInterface
 {
-    private $user;
     private $repo;
 
     function __construct(Repo $transac)
     {
         $this->repo = $transac;
-    }
-    public function setUser(RepoUser $usr)
-    {
-        $this->user = $usr;
-        return $this;
     }
 
     public function update(Array $list)

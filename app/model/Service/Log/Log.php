@@ -10,14 +10,10 @@ class Log
     private $user;
     private $repo;
 
-    function __construct(Repo $transac)
+    function __construct(Repo $transac, RepoUser $usr)
     {
         $this->repo = $transac;
-    }
-    public function setUser(RepoUser $usr)
-    {
         $this->user = $usr;
-        return $this;
     }
 
     public function log(float $download, float $upload, $date, String $idDevice)

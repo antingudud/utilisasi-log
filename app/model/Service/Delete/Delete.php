@@ -7,10 +7,9 @@ use App\Model\Service\Delete\DeleteInterface;
 class Delete implements DeleteInterface
 {
     private $repo;
-    public function setRepo(Repo $repo)
+    public function __construct(Repo $repo)
     {
         $this->repo = $repo;
-        return $this;
     }
 
     public function delete(Array $list)
