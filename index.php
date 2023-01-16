@@ -14,7 +14,9 @@ use App\Model\Service\Log\Log;
 use App\Core\Database\MysqliAdapter;
 use App\Core\ConnectDB;
 use App\Model\Service\Delete\Delete;
+use App\Model\Service\Import\ImportWAN\ImportWAN;
 use App\Model\Service\Update\Update;
+use App\Model\Service\Upload\Upload;
 
 $sqladapter = new MysqliAdapter(new ConnectDB);
 $mapperTr = new Mapper($sqladapter);
@@ -40,6 +42,11 @@ Session::set("username","guest");
 Session::init(3600);
 define('VIEW_PATH', __DIR__ . "/app/view");
 
+$router->get('/test', function() 
+{
+    include_once "app/view/Transaction/test.php";
+});
+
 $router->set404(function () {
     header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
     include "app/view/404.php";
@@ -52,6 +59,10 @@ $router->get('/view', function () use($Home) {
 });
 $router->get('view/new', function() use($Home) {
     echo $Home->new();
+});
+$router->get('import', function() use($Home)
+{
+    echo $Home->import();
 });
 $router->mount('/submit', function() use ($router, $Home, $trserv, $logserv, $updateserv, $delserv) {
     $router->post('/log', function() use ($logserv) {
@@ -71,6 +82,24 @@ $router->mount('/submit', function() use ($router, $Home, $trserv, $logserv, $up
         $submit = new SubmitContr($_POST['id']);
         $submit->setService($updateserv);
         return $submit->edit();
+    });
+    $router->post('/file', function()
+    {
+        $submit = new SubmitContr($_FILES);
+        $uploadserv = new Upload;
+        $submit->setService($uploadserv);
+        return $submit->upload();
+    });
+    $router->post('/import', function()
+    {
+        $import = new ImportWAN;
+        $submit = new SubmitContr($_FILES);
+        $upload = new Upload;
+
+        $submit->setService($upload);
+        $fileObj = $submit->upload();
+        
+        return $import->import($fileObj);
     });
 });
 $router->mount('/options', function() use($router, $Home) {

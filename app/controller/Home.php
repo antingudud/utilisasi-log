@@ -62,5 +62,10 @@ class Home {
         $View = (new View('resources/components/report', ['content' => $content, 'month' => ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'], 'semester' => ['Semester 1', 'Semester 2']]));
         return $View->render();
     }
+    public function import()
+    {
+        $View = new View('resources/components/import');
+        return $View->render();
+    }
 }
 ?>

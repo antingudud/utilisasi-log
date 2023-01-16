@@ -69,4 +69,10 @@ class SubmitContr
 
         return $this->service->update($list);
     }
+    public function upload()
+    {
+        $data = $this->data['uploadfile'];
+
+        return $this->service->receiveFile($data);
+    }
 }
