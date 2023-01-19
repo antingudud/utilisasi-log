@@ -90,9 +90,9 @@ $router->mount('/submit', function() use ($router, $Home, $trserv, $logserv, $up
         $submit->setService($uploadserv);
         return $submit->upload();
     });
-    $router->post('/import', function()
+    $router->post('/import', function() use ($logserv)
     {
-        $import = new ImportWAN;
+        $import = new ImportWAN($logserv);
         $submit = new SubmitContr($_FILES);
         $upload = new Upload;
 
