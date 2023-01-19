@@ -16,6 +16,14 @@ class Log
         $this->user = $usr;
     }
 
+    /**
+     * Log daily network usage to the database
+     * 
+     * @param Float $download
+     * @param Float $upload
+     * @param String $date The date of the network usage
+     * @param String $idDevice The id of the device
+     */
     public function log(float $download, float $upload, $date, String $idDevice)
     {
         $this->validate($download, $upload, $date, $idDevice);
@@ -35,11 +43,11 @@ class Log
     public function validate($download, $upload, $date, $idDevice)
     {
         $errors = [];
-        if (empty($download) || preg_match('/[a-zA-Z]+/', $download) || !is_numeric($download)) {
+        if (preg_match('/[a-zA-Z]+/', $download) || !is_numeric($download)) {
             $errors = ['error'];
         }
 
-        if (empty($upload) || preg_match('/[a-zA-Z]+/', $upload) || !is_numeric($upload)) {
+        if (preg_match('/[a-zA-Z]+/', $upload) || !is_numeric($upload)) {
             $errors = ['error'];
         }
 
