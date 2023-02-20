@@ -12,6 +12,5 @@ $idDevice = $_GET['idDevice'];
 $selectedTime = intval($_GET['selectedTime']);
 $range = $_GET['range'];
 $year = intval($_GET['year']);
-$repo = (new Repo(new Mapper(New MysqliAdapter(New ConnectDB))));
-$chart = new DrawChart($idDevice, $year, $selectedTime, $range, $repo);
+$chart = new DrawChart($idDevice, $year, $selectedTime, $range, New MysqliAdapter(New ConnectDB));
 $chart->draw();

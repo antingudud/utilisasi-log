@@ -1,14 +1,19 @@
 <?php
 namespace App\Model\Repository\Device;
-use App\Model\Mapper\Device\DvcInterface;
+
+use App\Core\Database\AdapterInterface;
 use App\Model\Device;
+use App\Model\Mapper\Device\DeviceMapper;
 
 class DeviceRepo
 {
     private $mapper;
-    public function __construct(DvcInterface $mapper)
+    private $db;
+
+    public function __construct(AdapterInterface $adapter)
     {
-        $this->mapper = $mapper;
+        $this->db = $adapter;
+        $this->mapper = new DeviceMapper($this->db);
     }
 
     public function create(String $idDevice)

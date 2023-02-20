@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Service\Chart;
 
+use App\Core\Database\AdapterInterface;
 use App\Model\Repository\Transaction\Repo;
 use App\Model\Service\Chart\DrawChartInterface;
 
@@ -18,7 +19,7 @@ class DrawChart implements DrawChartInterface
     private $download;
     private $upload;
     
-    public function __construct(string $idDevice, int $year, int $selectedTime, string $range = "", Repo $repo)
+    public function __construct(string $idDevice, int $year, int $selectedTime, string $range = "", AdapterInterface $adapter)
     {
         $this->idDevice = $idDevice;
         $this->year = $year;
@@ -26,7 +27,7 @@ class DrawChart implements DrawChartInterface
         $this->range = $range;
         $this->width = 800;
         $this->height = 800;
-        $this->repo = $repo;
+        $this->repo = new Repo($adapter);
     }
 
     public function draw()

@@ -4,8 +4,8 @@ namespace App\Model\Mapper\Transaction;
 
 use App\Model\Transac;
 use App\Core\Database\AdapterInterface;
-use App\Model\Mapper\Device\DvcInterface;
-use App\Model\Mapper\User\UsrMapperInterface;
+use App\Model\Mapper\Device\DeviceMapper;
+use App\Model\Mapper\User\UserMapper;
 
 class Mapper
 {
@@ -26,15 +26,15 @@ class Mapper
         return $this;
     }
 
-    public function setUserMapper(UsrMapperInterface $usr)
+    public function setUserMapper()
     {
-        $this->user = $usr;
+        $this->user = new UserMapper($this->db);
         return $this;
     }
 
-    public function setDeviceMapper(DvcInterface $dvc)
+    public function setDeviceMapper()
     {
-        $this->device = $dvc;
+        $this->device = new DeviceMapper($this->db);
         return $this;
     }
 

@@ -3,7 +3,6 @@ require_once 'vendor/autoload.php';
 use Josantonius\Session\Session;
 use App\Controller\OptionsContr;
 use App\Controller\SubmitContr;
-use App\Model\TransacService;
 use App\Model\Mapper\Transaction\Mapper;
 use App\Model\Mapper\User\UserMapper;
 use App\Model\Mapper\Device\DeviceMapper;
@@ -23,19 +22,17 @@ $mapperTr = new Mapper($sqladapter);
 $mapperUsr = new UserMapper($sqladapter);
 $mapperDvc = new DeviceMapper($sqladapter);
 
-$repoUser = new RepoUser($mapperUsr);
-$dvcrepo = new DeviceRepo($mapperDvc);
+$repoUser = new RepoUser($sqladapter);
+$dvcrepo = new DeviceRepo($sqladapter);
 $repoTr = new Repo($sqladapter);
-$repoTr->setMapper($mapperTr);
-$repoTr->setDeviceRepo($dvcrepo);
-$trserv = new TransacService($repoTr);
-$trserv->setUser($repoUser);
+$repoTr->setMapper();
+$repoTr->setDeviceRepo();
 $logserv = new Log($repoTr, $repoUser);
 $updateserv = new Update($repoTr);
 $delserv = new Delete($repoTr);
 
-$mapperTr->setUserMapper($mapperUsr);
-$mapperTr->setDeviceMapper($mapperDvc);
+$mapperTr->setUserMapper();
+$mapperTr->setDeviceMapper();
 
 $Home = new \App\Controller\Home();
 $router = new \Bramus\Router\Router();
@@ -94,7 +91,7 @@ $router->post('test', function()
         }
     }
 });
-$router->mount('/submit', function() use ($router, $Home, $trserv, $logserv, $updateserv, $delserv) {
+$router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv, $delserv) {
     $router->post('/log', function() use ($logserv) {
         $submit = new SubmitContr($_POST);
         $submit->setService($logserv);

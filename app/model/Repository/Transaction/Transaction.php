@@ -18,14 +18,14 @@ class Repo
     {
         $this->adapter = $db;
     }
-    public function setMapper(Mapper $mp)
+    public function setMapper()
     {
-        $this->mapper = $mp;
+        $this->mapper = new Mapper($this->adapter);
         return $this;
     }
-    public function setDeviceRepo(DeviceRepo $repo)
+    public function setDeviceRepo()
     {
-        $this->device = $repo;
+        $this->device = new DeviceRepo($this->adapter);
         return $this;
     }
 

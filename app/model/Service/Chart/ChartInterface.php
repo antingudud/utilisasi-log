@@ -1,9 +1,10 @@
 <?php
 namespace App\Model\Service\Chart;
-use App\Model\Repository\Transaction\Repo;
+
+use App\Core\Database\AdapterInterface;
 
 interface DrawChartInterface
 {
-    public function __construct(string $idDevice, int $year, int $selectedTime, string $range = "", Repo $repo);
+    public function __construct(string $idDevice, int $year, int $selectedTime, string $range = "", AdapterInterface $adapter);
     public function draw();
 }
