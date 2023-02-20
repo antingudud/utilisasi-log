@@ -57,40 +57,6 @@ $router->get('import', function() use($Home)
 {
     echo $Home->import();
 });
-$router->get('test', function() {
-    include_once("app/view/test.php");
-});
-$router->post('test', function()
-{
-    $destination = __DIR__ . "/public/uploaded";
-
-    // print_r($_FILES['image']);
-
-    $file = new \Aulia\ImageUpload\Upload($_FILES['files'], $_SERVER);
-    $fs = new \Aulia\ImageUpload\Filesystem\Mock();
-    $validator = new \Aulia\ImageUpload\Validator\Simple("2M", ['image/png', 'image/jpeg', 'application/vnd.ms-excel']);
-    $pr = new \Aulia\ImageUpload\PathResolver\Simple($destination);
-
-    $file->setFilesystem($fs);
-    $file->addValidator([$validator]);
-    $file->setPathResolver($pr);
-    list($files, $headers) = $file->processAll();
-
-    foreach($headers as $header => $value) {
-        header($header . ': ' . $value);
-    }
-    echo json_encode(['files' => $files]);
-    
-    foreach($files as $file)
-    {
-        if(isset($file->completed))
-        {
-            echo $file->getRealPath();
-
-            var_dump($file->isFile());
-        }
-    }
-});
 $router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv, $delserv) {
     $router->post('/log', function() use ($logserv) {
         $submit = new SubmitContr($_POST);
