@@ -1,14 +1,11 @@
 <?php
 namespace App\Model\Service\Import\ImportWAN;
 
-use App\Model\Service\Import\ImportInterface;
+use App\Model\Service\Import\IImportService;
 use App\Model\Service\Log\Log;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
-use stdClass;
-use \PhpOffice\PhpSpreadsheet\Calculation\Functions;
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
 
-class ImportWAN implements ImportInterface
+class ImportWAN implements IImportService
 {
     private Log $log;
     private Object $file;

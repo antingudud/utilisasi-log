@@ -26,7 +26,7 @@ class Log
      */
     public function log(float $download, float $upload, $date, String $idDevice)
     {
-        $this->validate($download, $upload, $date, $idDevice);
+        // $this->validate($download, $upload, $date, $idDevice);
 
         $username = "dummy";
         $id = substr(uniqid(), 5);

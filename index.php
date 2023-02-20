@@ -25,7 +25,8 @@ $mapperDvc = new DeviceMapper($sqladapter);
 
 $repoUser = new RepoUser($mapperUsr);
 $dvcrepo = new DeviceRepo($mapperDvc);
-$repoTr = new Repo($mapperTr);
+$repoTr = new Repo($sqladapter);
+$repoTr->setMapper($mapperTr);
 $repoTr->setDeviceRepo($dvcrepo);
 $trserv = new TransacService($repoTr);
 $trserv->setUser($repoUser);
@@ -41,11 +42,6 @@ $router = new \Bramus\Router\Router();
 Session::set("username","guest");
 Session::init(3600);
 define('VIEW_PATH', __DIR__ . "/app/view");
-
-$router->get('/test', function() 
-{
-    include_once "app/view/Transaction/test.php";
-});
 
 $router->set404(function () {
     header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
@@ -63,6 +59,40 @@ $router->get('view/new', function() use($Home) {
 $router->get('import', function() use($Home)
 {
     echo $Home->import();
+});
+$router->get('test', function() {
+    include_once("app/view/test.php");
+});
+$router->post('test', function()
+{
+    $destination = __DIR__ . "/public/uploaded";
+
+    // print_r($_FILES['image']);
+
+    $file = new \Aulia\ImageUpload\Upload($_FILES['files'], $_SERVER);
+    $fs = new \Aulia\ImageUpload\Filesystem\Mock();
+    $validator = new \Aulia\ImageUpload\Validator\Simple("2M", ['image/png', 'image/jpeg', 'application/vnd.ms-excel']);
+    $pr = new \Aulia\ImageUpload\PathResolver\Simple($destination);
+
+    $file->setFilesystem($fs);
+    $file->addValidator([$validator]);
+    $file->setPathResolver($pr);
+    list($files, $headers) = $file->processAll();
+
+    foreach($headers as $header => $value) {
+        header($header . ': ' . $value);
+    }
+    echo json_encode(['files' => $files]);
+    
+    foreach($files as $file)
+    {
+        if(isset($file->completed))
+        {
+            echo $file->getRealPath();
+
+            var_dump($file->isFile());
+        }
+    }
 });
 $router->mount('/submit', function() use ($router, $Home, $trserv, $logserv, $updateserv, $delserv) {
     $router->post('/log', function() use ($logserv) {

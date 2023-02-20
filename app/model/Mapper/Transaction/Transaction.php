@@ -13,10 +13,17 @@ class Mapper
     private $user;
     private $device;
     private $transactionCollection;
+    // private 
 
     public function __construct(AdapterInterface $db)
     {
         $this->db = $db;
+    }
+
+    public function getInstance(AdapterInterface $adapter)
+    {
+        $this->db = $adapter;
+        return $this;
     }
 
     public function setUserMapper(UsrMapperInterface $usr)
@@ -29,19 +36,6 @@ class Mapper
     {
         $this->device = $dvc;
         return $this;
-    }
-
-    public function beginTransac()
-    {
-        return $this->db->beginTransaction();
-    }
-    public function commitTransac()
-    {
-        return $this->db->commitTransaction();
-    }
-    public function rollbackTransac()
-    {
-        return $this->db->rollbackTransaction();
     }
 
     public function find(Array $filter = [], $one = FALSE)
@@ -94,25 +88,8 @@ class Mapper
     {
         return $this->db->select(['COUNT(*)'], 'transaction', ['idTrx' => $tr->getId()])->fetch_row()[0]? true : false;
     }
-    public function existsOnThatDay(String $idDevice, String $date)
-    {
-        return $this->db->select(['COUNT(*)'], 'transaction', ['dateTime' => $date, 'idDevice' => $idDevice])->fetch_row()[0] ? true : false;
-    }
-
-    public function fetchSemesterData(String $idDevice, int $year, int $selectedTIme)
-    {
-        return ($this->db->select(["'' AS date", 'IF(MONTH(dateTime) < 7, 1,2) as semester', 'MONTHNAME(dateTime) as month', 'device.nameDevice', 'MAX(TRIM(download)+0) AS download', 'MAX(TRIM(upload)+0) AS upload'], 'device RIGHT JOIN transaction ON device.idDevice = transaction.idDevice', ['device.idDevice' => $idDevice, 'YEAR(dateTime)' => $year, 'IF(MONTH(dateTime) < 7, 1,2)' => $selectedTIme], '', "GROUP BY month ORDER BY dateTime ASC")->fetch_all(MYSQLI_ASSOC));
-    }
-    public function fetchMonthData(String $idDevice, int $year, int $selectedTime)
-    {
-        return $this->db->select(['DAYOFMONTH(dateTime) AS date', 'MONTHNAME(dateTime) AS month', 'device.nameDevice', 'TRIM(DOWNLOAD)+0 AS download', 'TRIM(upload)+0 AS upload'], 'device RIGHT JOIN transaction ON device.idDevice = transaction.idDevice', ['device.idDevice' => $idDevice, 'MONTH(dateTime)' => $selectedTime, 'YEAR(dateTime)' => $year], '', 'ORDER BY dateTime ASC')->fetch_all(MYSQLI_ASSOC);
-    }
-
-    public function getSpreadsheetView()
-    {
-        return $this->db->select(["DATE_FORMAT(dateTime, '%a, %e %b %Y') AS date", "TRIM(download_CR_Indihome)+0 AS dl_CR_Indihome", "TRIM(upload_CR_Indihome)+0 AS ul_CR_Indihome", "TRIM(download_CP_Indihome)+0 AS dl_CP_Indihome", "TRIM(upload_CP_Indihome)+0 AS ul_CP_Indihome", "TRIM(download_PK_Biznet)+0 AS dl_PK_Biznet", "TRIM(upload_PK_Biznet)+0 AS ul_PK_Biznet", "TRIM(download_PK_Indosat)+0 AS dl_PK_Indosat", "TRIM(upload_PK_Indosat)+0 AS ul_PK_Indosat", "TRIM(download_CK_Orbit)+0 AS dl_CK_Orbit", "TRIM(upload_CK_Orbit)+0 AS ul_CK_Orbit", "TRIM(download_CK_XL)+0 AS dl_CK_XL", "TRIM(upload_CK_XL)+0 AS ul_CK_XL"], 'util_pivotted', [1=>1], "", "ORDER By dateTime ASC")->fetch_all(MYSQLI_ASSOC);
-    }
-    public function createTransaction(array $row = [])
+    
+    protected function createTransaction(array $row = [])
     {
         $tr = new Transac;
         
@@ -130,7 +107,7 @@ class Mapper
 
         return $tr;
     }
-    public function createTransactionCollection(array $rows)
+    protected function createTransactionCollection(array $rows)
     {
         /*
         * Iterate through rows.

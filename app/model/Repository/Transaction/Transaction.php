@@ -1,5 +1,7 @@
 <?php
 namespace App\Model\Repository\Transaction;
+
+use App\Core\Database\AdapterInterface;
 use App\Model\Transac;
 use App\Model\User\User;
 use App\Model\Device;
@@ -10,10 +12,16 @@ class Repo
 {
     private $mapper;
     private $device;
+    private $adapter;
 
-    public function __construct(Mapper $mp)
+    public function __construct(AdapterInterface $db)
+    {
+        $this->adapter = $db;
+    }
+    public function setMapper(Mapper $mp)
     {
         $this->mapper = $mp;
+        return $this;
     }
     public function setDeviceRepo(DeviceRepo $repo)
     {
@@ -23,7 +31,7 @@ class Repo
 
     public function getSpreadsheetView()
     {
-        return $this->mapper->getSpreadsheetView();
+        return $this->adapter->select(["DATE_FORMAT(dateTime, '%a, %e %b %Y') AS date", "TRIM(download_CR_Indihome)+0 AS dl_CR_Indihome", "TRIM(upload_CR_Indihome)+0 AS ul_CR_Indihome", "TRIM(download_CP_Indihome)+0 AS dl_CP_Indihome", "TRIM(upload_CP_Indihome)+0 AS ul_CP_Indihome", "TRIM(download_PK_Biznet)+0 AS dl_PK_Biznet", "TRIM(upload_PK_Biznet)+0 AS ul_PK_Biznet", "TRIM(download_PK_Indosat)+0 AS dl_PK_Indosat", "TRIM(upload_PK_Indosat)+0 AS ul_PK_Indosat", "TRIM(download_CK_Orbit)+0 AS dl_CK_Orbit", "TRIM(upload_CK_Orbit)+0 AS ul_CK_Orbit", "TRIM(download_CK_XL)+0 AS dl_CK_XL", "TRIM(upload_CK_XL)+0 AS ul_CK_XL"], 'util_pivotted', [1=>1], "", "ORDER By dateTime ASC")->fetch_all(MYSQLI_ASSOC);;
     }
 
     public function findById(String $id)
@@ -33,12 +41,13 @@ class Repo
 
     public function exists(String $idDevice, String $date)
     {
-        return $this->mapper->existsOnThatDay($idDevice, $date);
+        return $this->adapter->select(['COUNT(*)'], 'transaction', ['dateTime' => $date, 'idDevice' => $idDevice])->fetch_row()[0] ? true : false;
     }
 
     public function fetchSemesterChart(String $idDevice, Int $year, Int $selectedTime)
     {
-        $datas = $this->mapper->fetchSemesterData($idDevice, $year, $selectedTime);
+        $datas = ($this->adapter->select(["'' AS date", 'IF(MONTH(dateTime) < 7, 1,2) as semester', 'MONTHNAME(dateTime) as month', 'device.nameDevice', 'MAX(TRIM(download)+0) AS download', 'MAX(TRIM(upload)+0) AS upload'], 'device RIGHT JOIN transaction ON device.idDevice = transaction.idDevice', ['device.idDevice' => $idDevice, 'YEAR(dateTime)' => $year, 'IF(MONTH(dateTime) < 7, 1,2)' => $selectedTime], '', "GROUP BY month ORDER BY dateTime ASC")->fetch_all(MYSQLI_ASSOC));
+
         if(!$datas){
             return[[0], 'NOT FOUND', [0], [0]];
         }
@@ -52,7 +61,8 @@ class Repo
     }
     public function fetchMonthChart(String $idDevice, Int $year, Int $selectedTime)
     {
-        $datas = $this->mapper->fetchMonthData($idDevice, $year, $selectedTime);
+        $datas = $this->adapter->select(['DAYOFMONTH(dateTime) AS date', 'MONTHNAME(dateTime) AS month', 'device.nameDevice', 'TRIM(DOWNLOAD)+0 AS download', 'TRIM(upload)+0 AS upload'], 'device RIGHT JOIN transaction ON device.idDevice = transaction.idDevice', ['device.idDevice' => $idDevice, 'MONTH(dateTime)' => $selectedTime, 'YEAR(dateTime)' => $year], '', 'ORDER BY dateTime ASC')->fetch_all(MYSQLI_ASSOC);
+
         if(!$datas){
             return[[0], 'NOT FOUND', [0], [0]];
         }
@@ -87,7 +97,7 @@ class Repo
         $tr = $this->createCollection($list);
 
         $dateModified = date('Y-m-d H:i:s');
-        $this->mapper->beginTransac();
+        $this->adapter->beginTransaction();
         try
         {
             foreach ($tr as $key => $value) {
@@ -97,11 +107,11 @@ class Repo
 
                 $this->mapper->save($value);
             }
-            return $this->mapper->commitTransac();
+            return $this->adapter->commitTransaction();
         }
         catch (\Throwable $th)
         {
-            return $this->mapper->rollbackTransac();
+            return $this->adapter->rollbackTransaction();
         }
     }
 
@@ -112,7 +122,7 @@ class Repo
     public function delete(Array $list)
     {
         $tr = $this->createCollection($list);
-        $this->mapper->beginTransac();
+        $this->adapter->beginTransaction();
 
         try {
             foreach($tr as $key => $value)
@@ -120,10 +130,10 @@ class Repo
                 $this->mapper->remove($value);
             }
 
-            return $this->mapper->commitTransac();
+            return $this->adapter->commitTransaction();
 
         } catch (\Throwable $th) {
-            return $this->mapper->rollbackTransac();
+            return $this->adapter->rollbackTransaction();
         }
     }
 
