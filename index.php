@@ -100,7 +100,9 @@ $router->mount('/options', function() use($router, $Home) {
         return (new OptionsContr)->getDevices();
     });
     $router->post('/new', function() use($Home) {
-        echo $Home->alter();
+        $month = $_POST? $_POST['month']: NULL;
+        $year = $_POST? $_POST['year']: NULL;
+        echo $Home->alter($year, $month);
     });
 });
 $router->get('view/report', function() use ($Home) {

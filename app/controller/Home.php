@@ -8,6 +8,7 @@ use App\Model\DeviceService;
 use App\Model\Device;
 use App\Model\Mapper\Transaction\Mapper;
 use App\Model\Repository\Transaction\Repo;
+use App\Model\Service\SheetPerMonth\SheetPerMonth;
 use App\Model\TransacService;
 
 class Home {
@@ -47,14 +48,12 @@ class Home {
         $View = (new View('resources/components/update', ['deviceList' => $deviceList]));
         return $View->render();
     }
-    public function alter()
+    public function alter(?Int $selectedYear ,?Int $selectedMonth)
     {
         $adapter = new MysqliAdapter(new ConnectDB);
-        $transac = new Mapper($adapter);
-        $repo = new Repo($adapter);
-        $repo->setMapper($transac);
-        $logData = (new TransacService($repo))->getAlterForm();
-        $View = (new View('resources/components/alter', ['log' => $logData]));
+        $service = new SheetPerMonth($selectedYear, $selectedMonth, $adapter);
+        $logData = $service->getPrettySheet();
+        $View = (new View('resources/components/alter', ['log' => $logData, 'month' => ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']]));
         return $View->render();
     }
     public function report()
