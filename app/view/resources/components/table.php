@@ -153,7 +153,7 @@ $body = $this->params['body'];
                     success: function(response)
                     {
                         let lines = response.split('\n');
-                        let newResponse = lines.slice(10).join('\n');
+                        let newResponse = lines.slice(12).join('\n');
                         $('body').html(
                             newResponse
                         )
