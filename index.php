@@ -13,6 +13,7 @@ use App\Model\Service\Log\Log;
 use App\Core\Database\MysqliAdapter;
 use App\Core\ConnectDB;
 use App\Model\Service\Delete\Delete;
+use App\Model\Service\Device\AddDevice;
 use App\Model\Service\Import\ImportWAN\ImportWAN;
 use App\Model\Service\Update\Update;
 use App\Model\Service\Upload\Upload;
@@ -45,7 +46,7 @@ $router->set404(function () {
     include "app/view/404.php";
 });
 $router->get('/', function() use($Home) {
-    $Home->index();
+    echo $Home->index();
 });
 $router->get('/view', function () use($Home) {
     echo $Home->view();
@@ -53,11 +54,15 @@ $router->get('/view', function () use($Home) {
 $router->get('view/new', function() use($Home) {
     echo $Home->new();
 });
+$router->get('view/new/device', function() use ($Home)
+{
+    echo $Home->newDevice();
+});
 $router->get('import', function() use($Home)
 {
     echo $Home->import();
 });
-$router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv, $delserv) {
+$router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv, $delserv, $sqladapter) {
     $router->post('/log', function() use ($logserv) {
         $submit = new SubmitContr($_POST);
         $submit->setService($logserv);
@@ -93,6 +98,11 @@ $router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv,
         $fileObj = $submit->upload();
         
         return $import->import($fileObj);
+    });
+    $router->post('/device', function() use ($sqladapter)
+    {
+        $sAddDevice = new AddDevice($sqladapter);
+        $sAddDevice->add($_POST['nameDevice'], $_POST['category']);
     });
 });
 $router->mount('/options', function() use($router, $Home) {

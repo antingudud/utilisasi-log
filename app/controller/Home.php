@@ -30,6 +30,11 @@ class Home {
         $View = (new View('resources/components/new'));
         return $View->render();
     }
+    public function newDevice()
+    {
+        $View = (new View('resources/components/newdevice'));
+        return $View->render();
+    }
     public function update(Array $id)
     {
         $errors = [];
