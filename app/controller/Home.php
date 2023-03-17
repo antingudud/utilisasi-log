@@ -19,7 +19,7 @@ class Home {
         $body = (new Device)->getTransaction();
         $params = [
             'content' => [], 
-            'header' => ['Tanggal', 'Device', 'Interface', 'Download', 'Upload', 'Author', 'Tanggal dibuat', 'Tanggal diubah', '<button type="submit" id="buttonViewUpdate">Update</button><button class="button error" type="submit" id="buttonViewDelete">Delete</button>'] , 
+            'header' => ['Tanggal', 'Device', 'Interface', 'Download', 'Upload', 'Author', 'Tanggal dibuat', 'Tanggal diubah', '<button type="submit" class="button bg-green-300" id="buttonViewUpdate">Update</button><button class="button error" type="submit" id="buttonViewDelete">Delete</button>'] , 
             'body' => $body
         ];
         $View = (new View('resources/components/table', $params));

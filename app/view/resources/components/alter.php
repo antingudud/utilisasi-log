@@ -50,15 +50,15 @@ $monthList = $this->params['month'];
         </tr>
         <tr>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
-            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
-            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
-            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
             <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
         </tr>
