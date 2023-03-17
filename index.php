@@ -17,6 +17,7 @@ use App\Model\Service\Device\AddDevice;
 use App\Model\Service\Import\ImportWAN\ImportWAN;
 use App\Model\Service\Update\Update;
 use App\Model\Service\Upload\Upload;
+use App\Controller\SpreadsheetController;
 
 $sqladapter = new MysqliAdapter(new ConnectDB);
 $mapperTr = new Mapper($sqladapter);
@@ -57,6 +58,14 @@ $router->get('view/new', function() use($Home) {
 $router->get('view/new/device', function() use ($Home)
 {
     echo $Home->newDevice();
+});
+$router->get('test', function() use ($repoTr)
+{
+    echo $repoTr->cookSpreadsheet(['43ert2sf', 'mb894js'], 8, 2022);
+});
+$router->get('viewtest', function() {
+    $SpreadsheetController = new SpreadsheetController();
+    echo $SpreadsheetController->index();
 });
 $router->get('import', function() use($Home)
 {
