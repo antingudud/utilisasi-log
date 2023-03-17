@@ -43,6 +43,7 @@
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  
+  --tw-backdrop-sepia:  
 }
 
 ::backdrop {
@@ -90,14 +91,17 @@
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  
+  --tw-backdrop-sepia:  
 }
 
 .container {
+  width: 100%
   width: 100%
 }
 
 @media (min-width: 640px) {
   .container {
+    max-width: 640px
     max-width: 640px
   }
 }
@@ -105,11 +109,13 @@
 @media (min-width: 768px) {
   .container {
     max-width: 768px
+    max-width: 768px
   }
 }
 
 @media (min-width: 1024px) {
   .container {
+    max-width: 1024px
     max-width: 1024px
   }
 }
@@ -117,20 +123,24 @@
 @media (min-width: 1280px) {
   .container {
     max-width: 1280px
+    max-width: 1280px
   }
 }
 
 @media (min-width: 1536px) {
   .container {
     max-width: 1536px
+    max-width: 1536px
   }
 }
 
 .relative {
   position: relative !important
+  position: relative !important
 }
 
 .sticky {
+  position: sticky !important
   position: sticky !important
 }
 
@@ -152,6 +162,8 @@
 
 .inline-block {
   display: inline-block !important
+.inline-block {
+  display: inline-block !important
 }
 
 .flex {
@@ -167,6 +179,11 @@
 }
 
 .hidden {
+  display: none !important
+}
+
+.h-24 {
+  height: 6rem !important
   display: none !important
 }
 
@@ -228,13 +245,19 @@
 
 .border {
   border-width: 1px !important
+  border-width: 1px !important
 }
 
 .bg-slate-300 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(203 213 225 / var(--tw-bg-opacity)) !important
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity)) !important
 }
 
+.bg-slate-900 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(15 23 42 / var(--tw-bg-opacity)) !important
 .bg-slate-900 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(15 23 42 / var(--tw-bg-opacity)) !important
@@ -243,9 +266,14 @@
 .bg-white {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important
+.bg-white {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important
 }
 
 .px-6 {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important
   padding-left: 1.5rem !important;
   padding-right: 1.5rem !important
 }
@@ -253,13 +281,21 @@
 .py-3 {
   padding-top: 0.75rem !important;
   padding-bottom: 0.75rem !important
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important
 }
 
 .text-white {
   --tw-text-opacity: 1 !important;
   color: rgb(255 255 255 / var(--tw-text-opacity)) !important
+.text-white {
+  --tw-text-opacity: 1 !important;
+  color: rgb(255 255 255 / var(--tw-text-opacity)) !important
 }
 
+.hover\:text-red-300:hover {
+  --tw-text-opacity: 1 !important;
+  color: rgb(252 165 165 / var(--tw-text-opacity)) !important
 .hover\:text-red-300:hover {
   --tw-text-opacity: 1 !important;
   color: rgb(252 165 165 / var(--tw-text-opacity)) !important
