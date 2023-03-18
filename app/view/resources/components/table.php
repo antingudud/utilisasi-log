@@ -13,7 +13,7 @@ $body = $this->params['body'];
     <table class="striped" id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
         <tr>
         <th colspan="9" style="background: white; position: sticky; top: 0;">
-                <button class="button"><a href="/utilisasi-log/view/new">Upload data</a></button>
+                <button class="button"><a href="{{base-url}}/view/new">Upload data</a></button>
                 <button class="button">Category</button>
                 <select name="device" id="device">
                     <option hidden disabled selected value>Sort by</option>
@@ -21,7 +21,7 @@ $body = $this->params['body'];
                 </select>
                 <button class="button" name="refreshViewIndex" id="refreshViewIndex">Refresh</button>
                 <button class="button" name="alternateTableLook" id="alternateTableLook">Alternate Look</button>
-                <button class="button" name="chartReport" id="chartReport"><a href="/utilisasi-log/view/report">Report</a></button>
+                <button class="button" name="chartReport" id="chartReport"><a href="{{base-url}}/view/report">Report</a></button>
             </th>
         </tr>
         <tr>

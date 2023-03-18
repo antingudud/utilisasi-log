@@ -1,6 +1,6 @@
 <div>
         <h1>KIP Upload Data Assessment Data</h1>
-        <button><a href="../view">Home</a></button>
+        <button><a href="{{baseUrl}}/view">Home</a></button>
         <form action="" method="post" id="utilForm" required>
             <ul>
                 <li>

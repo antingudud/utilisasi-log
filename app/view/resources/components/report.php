@@ -3,7 +3,7 @@ $monthList = $this->params['month'];
 $semestres = $this->params['semester'] ?>
 <div>
     <section>
-        <a href="../view"><button type="">Return</button></a>
+        <a href="{{baseUrl}}/view"><button type="">Return</button></a>
     </section>
 
     <section>

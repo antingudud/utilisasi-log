@@ -33,10 +33,10 @@ $monthList = $this->params['month'];
     <table class="relative w-full border striped" id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
         <tr>
             <th colspan="13" class="sticky top-0 px-6 py-3 bg-slate-300">
-                <button class="button"><a href="/utilisasi-log/view/new">Upload data</a></button>
+                <button class="button"><a href="{{baseUrl}}/view/new">Upload data</a></button>
                 <button class="button">Category</button>
                 <button class="button" name="alternateTableLook" id="alternateTableLook">Alternate Look</button>
-                <button class="button" name="chartReport" id="chartReport"><a href="/utilisasi-log/view/report">Report</a></button>
+                <button class="button" name="chartReport" id="chartReport"><a href="{{baseUrl}}/view/report">Report</a></button>
             </th>
         </tr>
         <tr>
