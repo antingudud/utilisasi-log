@@ -1,6 +1,6 @@
 <div>
         <h1>Add Device</h1>
-        <button><a href="{{baseUrl}}/view">Home</a></button>
+        <button><a href="{{base-url}}/view">Home</a></button>
         <form action="" method="post" id="utilForm" required>
             <ul>
                 <li>

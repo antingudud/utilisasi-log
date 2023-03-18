@@ -1,4 +1,4 @@
-<form method="POST" action="{{baseUrl}}/submit/import" enctype="multipart/form-data">
+<form method="POST" action="{{base-url}}/submit/import" enctype="multipart/form-data">
     <label for="uploadfile">Upload xls spreadsheet</label>
     <input type="file" name="uploadfile" id="uploadfile" required>
 

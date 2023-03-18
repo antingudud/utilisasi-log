@@ -1,7 +1,7 @@
 <?php $device = $this->params['deviceList'] ?>
 <div>
-    <form action="{{baseUrl}}/submit/edit" method="POST" id="editForm">
-        <button onclick="window.location = '{{baseUrl}}/view/'">
+    <form action="{{base-url}}/submit/edit" method="POST" id="editForm">
+        <button onclick="window.location = '{{base-url}}/view/'">
             Return
         </button>
         <ul>
