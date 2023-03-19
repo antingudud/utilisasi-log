@@ -8,6 +8,7 @@ use App\Model\DeviceService;
 use App\Model\Device;
 use App\Model\Mapper\Transaction\Mapper;
 use App\Model\Repository\Transaction\Repo;
+use App\Model\Service\Delete\Delete;
 use App\Model\Service\SheetPerMonth\SheetPerMonth;
 use App\Model\TransacService;
 
@@ -24,6 +25,15 @@ class Home {
         ];
         $View = (new View('resources/components/table', $params));
         return $View->render();
+    }
+    public function delete($data)
+    {
+        $repo = new Repo(new MysqliAdapter(new ConnectDB()));
+        $repo->setMapper();
+        $repo->setDeviceRepo();
+        $service = new Delete($repo);
+        $id = $data['id'];
+        return $service->delete($id);
     }
     public function new()
     {
