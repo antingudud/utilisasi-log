@@ -51,7 +51,7 @@ class Mapper
 
     public function save(Transac $tr)
     {
-        $modified = $tr->getDateModified()?: '';
+        $modified = $tr->getDateModified()?: '0000-00-00 00:00:00';
 
         if($this->exists($tr))
         {

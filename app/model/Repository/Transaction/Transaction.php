@@ -21,6 +21,8 @@ class Repo
     public function setMapper()
     {
         $this->mapper = new Mapper($this->adapter);
+        $this->mapper->setDeviceMapper();
+        $this->mapper->setUserMapper();
         return $this;
     }
     public function setDeviceRepo()
