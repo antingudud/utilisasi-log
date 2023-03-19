@@ -60,7 +60,7 @@
                 }))
 
           request = $.ajax({
-            url: "/utilisasi-log/submit/edit",
+            url: "{{base-url}}/submit/edit",
             type: "POST",
             data: {
                 id: result

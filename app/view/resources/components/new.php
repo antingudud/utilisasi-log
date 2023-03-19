@@ -37,13 +37,16 @@
         </form>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script>
+    <script type="module">
+        import {  FormHandler } from "../../../../javascript/FormHandler.js";
+        const formHandler = new FormHandler('utilForm', '{{base-url}}/submit/log');
+
         $(document).ready( function() {
             $('input:radio[name=category]').change(function() {
                 var value = this.value;
                 $.ajax({
                     type: 'POST',
-                    url: '/utilisasi-log/options/devices',
+                    url: '{{base-url}}/options/devices',
                     data: {
                         category: value
                     },
@@ -58,44 +61,5 @@
                     }
                 })
             })
-
-            $('#utilForm').submit(function(){
-                event.preventDefault();
-                var idDevice = $('#device').val()
-                var date = $('#date').val()
-                var download = $('#download').val()
-                var upload = $('#upload').val()
-                
-                $.ajax({
-                    type: 'POST',
-                    url: '/utilisasi-log/submit/log',
-                    data: {
-                        idDevice: idDevice,
-                        date: date,
-                        download: download,
-                        upload: upload
-                    },
-                    success: function(response) {
-                        $('#device').val('')
-                        $('#download').val('')
-                        $('#upload').val('')
-                    },
-                    error: function(xhr, status, response) {
-                        $('#device').val('')
-                        $('#download').val('')
-                        $('#upload').val('')
-                        if(xhr.status === 400) {
-                            var errorMessage = JSON.parse(xhr.responseText).error;
-                            console.error(errorMessage)
-                        } if(xhr.status === 500) {
-                            var errorMessage = JSON.parse(xhr.responseText).parse;
-                            console.error(errorMessage)
-                        } else {
-                            console.error(`Error: ${xhr.status}`);
-                        }
-                    }
-                }
-                )
-            })
-        }       );
+        });
     </script>

@@ -45,7 +45,7 @@ $body = $this->params['body'];
     </table>
 </form>
 
-<script>
+<script type="module">
     $(document).ready(function(){
         $("#viewTableForm").submit(function(e) {
             e.preventDefault()
@@ -63,7 +63,7 @@ $body = $this->params['body'];
                     console.log(`I am updating ${idValues.length} thing(s)`)
                     $.ajax(
                     {
-                        url: '/utilisasi-log/submit/update',
+                        url: '{{base-url}}/submit/update',
                         type: 'POST',
                         data: {id: idValues},
                         cache: false,
@@ -96,13 +96,13 @@ $body = $this->params['body'];
                     console.log(`I am deleting ${idValues.length} thing(s)`)
                     $.ajax(
                     {
-                        url: '/utilisasi-log/submit/delete',
+                        url: '{{base-url}}/submit/delete',
                         type: 'POST',
                         data: {id: idValues},
                         cache: false,
                         success: function(response)
                         {
-                            $('body').load('/utilisasi-log/view')
+                            $('body').load('{{base-url}}/view')
                         },
                         error: function(xhr, status, response)
                         {
@@ -126,7 +126,7 @@ $body = $this->params['body'];
 
                 $.ajax(
                 {
-                    url: '/utilisasi-log/submit/edit',
+                    url: '{{base-url}}/submit/edit',
                     type: 'POST',
                     data: {id: idValues, download: download, upload: upload},
                     cache: false,
@@ -147,7 +147,7 @@ $body = $this->params['body'];
             e.preventDefault()
             $.ajax(
                 {
-                    url: "/utilisasi-log/options/new",
+                    url: "{{base-url}}/options/new",
                     type: "POST",
                     cache: false,
                     success: function(response)

@@ -93,7 +93,7 @@ $monthList = $this->params['month'];
             
             $.ajax(
                 {
-                    url: '/utilisasi-log/options/new',
+                    url: '{{base-url}}/options/new',
                     type: 'POST',
                     data: {year: year, month: month},
                     cache: false,

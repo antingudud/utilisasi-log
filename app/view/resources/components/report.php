@@ -89,7 +89,7 @@ $semestres = $this->params['semester'] ?>
             var value = this.value
             $.ajax({
                 type: 'POST',
-                url: '/utilisasi-log/options/devices',
+                url: '{{base-url}}/options/devices',
                 data: {
                     category: value
                 },
@@ -126,7 +126,7 @@ $semestres = $this->params['semester'] ?>
 
             $("#chart").attr(
                 "src",
-                `/utilisasi-log/app/view/Transaction/sus.php?idDevice=${$('#device').val()}&selectedTime=${$('.timeframe:visible').val()}&range=${$('input[type=radio][name=period]:checked').val()}&year=${$('#year').val()}`
+                `{{base-url}}/app/view/Transaction/sus.php?idDevice=${$('#device').val()}&selectedTime=${$('.timeframe:visible').val()}&range=${$('input[type=radio][name=period]:checked').val()}&year=${$('#year').val()}`
             )
         })
     })
