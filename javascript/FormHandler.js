@@ -14,7 +14,17 @@ export class FormHandler
     {
         e.preventDefault();
         const formData = new FormData(this.form);
-        const data = Object.fromEntries(formData.entries())
+        const data = {}
+        for (let [key, value] of formData.entries()) {
+            if (data.hasOwnProperty(key)) {
+                if (!Array.isArray(data[key])) {
+                data[key] = [data[key]];
+                }
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
+        }
         
         $.ajax({
             type: 'POST',
