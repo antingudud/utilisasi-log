@@ -22,6 +22,6 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script type="module">
-        import {  FormHandler } from "../../../../javascript/FormHandler.js";
+        import {  FormHandler } from "{{base-url}}/javascript/FormHandler.js";
         const formHandler = new FormHandler('utilForm', '{{base-url}}/submit/device');
     </script>
