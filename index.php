@@ -113,7 +113,8 @@ $router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv,
     $router->post('/device', function() use ($sqladapter)
     {
         $sAddDevice = new AddDevice($sqladapter);
-        $sAddDevice->add($_POST['nameDevice'], $_POST['category']);
+        $data = $_POST['data'];
+        $sAddDevice->add($data['device'], $data['category']);
     });
 });
 $router->mount('/options', function() use($router, $Home) {
