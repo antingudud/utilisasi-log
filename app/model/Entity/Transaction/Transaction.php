@@ -1,6 +1,6 @@
 <?php
 namespace App\Model;
-use App\Model\Device;
+use App\Model\Device\Device;
 use App\Model\Repository\Transaction\Repo;
 use App\Model\Transaction\Exception\RecordExists;
 use App\Model\Repository\User\Repo as RepoUser;

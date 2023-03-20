@@ -1,5 +1,8 @@
 <?php
 require_once 'vendor/autoload.php';
+
+use App\Controller\Home;
+use App\Controller\NewDataController;
 use Josantonius\Session\Session;
 use App\Controller\OptionsContr;
 use App\Controller\SubmitContr;
@@ -52,8 +55,9 @@ $router->get('/', function() use($Home) {
 $router->get('/view', function () use($Home) {
     echo $Home->view();
 });
-$router->get('view/new', function() use($Home) {
-    echo $Home->new();
+$router->get('view/new', function() {
+    $NewData = new NewDataController();
+    echo $NewData->index();
 });
 $router->get('view/new/device', function() use ($Home)
 {
@@ -72,18 +76,16 @@ $router->get('import', function() use($Home)
     echo $Home->import();
 });
 $router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv, $delserv, $sqladapter) {
-    $router->post('/log', function() use ($logserv) {
-        $submit = new SubmitContr($_POST);
-        $submit->setService($logserv);
-        return $submit->log();
+    $router->post('/log', function() {
+        $NewData = new NewDataController();
+        return $NewData->submit($_POST);
     });
     $router->post('/update', function() use($Home) {
         echo ( $Home->update($_POST) );
     });
-    $router->post('/delete', function() use($delserv) {
-        $submit = new SubmitContr($_POST);
-        $submit->setService($delserv);
-        return $submit->delete();
+    $router->post('/delete', function() {
+        $Home = new Home();
+        return $Home->delete($_POST);
     });
     $router->post('/edit', function() use ($updateserv) {
         $submit = new SubmitContr($_POST['id']);

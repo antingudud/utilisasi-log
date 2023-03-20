@@ -1,7 +1,7 @@
 <?php $device = $this->params['deviceList'] ?>
 <div>
-    <form action="/utilisasi-log/submit/edit" method="POST" id="editForm">
-        <button onclick="window.location = '/utilisasi-log/view/'">
+    <form action="{{base-url}}/submit/edit" method="POST" id="editForm">
+        <button onclick="window.location = '{{base-url}}/view/'">
             Return
         </button>
         <ul>
@@ -60,7 +60,7 @@
                 }))
 
           request = $.ajax({
-            url: "/utilisasi-log/submit/edit",
+            url: "{{base-url}}/submit/edit",
             type: "POST",
             data: {
                 id: result
