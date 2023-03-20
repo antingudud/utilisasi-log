@@ -23,7 +23,7 @@ class View{
         if(!is_readable($viewPath)){
             return include_once VIEW_PATH . '/404.php';
         }
-        $layoutContent = $this->layoutContent();
+        $layoutContent = str_replace('{{base-url}}', $this->baseUrl, $this->layoutContent());
         $viewContent = $this->renderOnlyView();
         $viewContent = str_replace('{{base-url}}', $this->baseUrl, $viewContent);
         return str_replace('{{content}}', $viewContent, $layoutContent);
