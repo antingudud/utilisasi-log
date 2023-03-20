@@ -17,13 +17,13 @@
     <nav class="sticky top-0 z-50 flex items-center h-24 min-h-full max-h-28 bg-slate-900">
         <ul class="flex list-none m-0">
             <li class="mr-6">
-                <a class="text-white hover:text-red-300" href="{{base-url}/">Home</a>
+                <a class="text-white hover:text-red-300" href="{{base-url}}/">Home</a>
             </li>
             <li class="mr-6">
-                <a class="text-white hover:text-red-300" href="{{base-url}/viewtest">Spreadsheet</a>
+                <a class="text-white hover:text-red-300" href="{{base-url}}/viewtest">Spreadsheet</a>
             </li>
             <li class="mr-6">
-                <a class="text-white hover:text-red-300" href="{{base-url}/view/report">Graph</a>
+                <a class="text-white hover:text-red-300" href="{{base-url}}/view/report">Graph</a>
             </li>
         </ul>
     </nav>
