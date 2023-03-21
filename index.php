@@ -71,9 +71,18 @@ $router->get('viewtest', function() {
     $SpreadsheetController = new SpreadsheetController();
     echo $SpreadsheetController->index();
 });
+$router->post('input-test', function() {
+    print_r($_POST);
+});
 $router->get('import', function() use($Home)
 {
     echo $Home->import();
+});
+$router->mount('/spreadsheet', function() use ($router){
+    $router->post('/devices', function() {
+        $spreadsheet = new SpreadsheetController();
+        return $spreadsheet->getDeviceList();
+    });
 });
 $router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv, $delserv, $sqladapter) {
     $router->post('/log', function() {

@@ -1,8 +1,7 @@
 <?php
-if(isset($this->params['content'], $this->params['header'], $this->params['body'])){
-    $data = $this->params['content'];
-    $header = $this->params['header'];
-    $body = $this->params['body'];
+if(isset($this->params['data'])){
+    $data = $this->params['data'];
+    $devices = $data['devices'];
 }
 ?>
 
@@ -29,18 +28,28 @@ if(isset($this->params['content'], $this->params['header'], $this->params['body'
             ?>
         </select>
     </div>
+
     <div class="grid grid-cols-3 max-w-4xl">
+
         <select multiple class="max-w-lg" name="devices" id="list-added">
+            <?php
+            foreach($devices as $key => $value)
+            {
+                echo "<option value='$key'>$value</option>";
+            }
+            ?>
             <option value="wuuduheele">RouterPC</option>
             <option value="ooomaaagaaa">RouterUS</option>
         </select>
+
         <button class="items-center w-1/6 max-w-sm" formaction="#">+</button>
     </div>
+
     <div class="max-w-4xl">
         <button class="inline-block button" type="submit" id="submitTimeFrame">Go</button>
     </div>
 </form>
-
+<?php print_r($devices) ?>
 <table>
     <thead>
         <tr>
@@ -64,7 +73,20 @@ if(isset($this->params['content'], $this->params['header'], $this->params['body'
 <script type="module">
     import { FormHandler } from "{{base-url}}/javascript/FormHandler.js";
     let formHandler = new FormHandler('timeFrame', '{{base-url}}/input-test');
-
+    let devices;
+    const ajax = $.ajax({
+        type: 'POST',
+        url: '{{base-url}}/spreadsheet/devices',
+        success: function(response)
+        {
+            devices = JSON.parse(JSON.stringify(response));
+            console.log(devices.data)
+        },
+        error: function(xhr,status,response)
+        {
+            alert('error at grubbing');
+        }
+    })
     console.log('penis')
     let select = $(function() {
         $('#list-added').selectize({
