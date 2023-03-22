@@ -63,6 +63,10 @@ $router->get('view/new/device', function() use ($Home)
 {
     echo $Home->newDevice();
 });
+$router->post('view/table', function() {
+    $controller = new SpreadsheetController();
+    echo $controller->populateTable($_POST['data']);
+});
 $router->get('test', function() use ($repoTr)
 {
     echo $repoTr->cookSpreadsheet(['43ert2sf', 'mb894js'], 8, 2022);
