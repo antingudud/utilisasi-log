@@ -7,17 +7,15 @@ if(isset($this->params['data'])){
 
 <form class="grid" id="timeFrame" action="" method="POST">
     <div class="grid grid-cols-2 max-w-4xl">
-        <select class="max-w-md" name="selectMonth" id="selectMonth">
-            <option selected value="<?php echo date('n') ?>"><?php echo date('F') ?></option>
+        <select required class="max-w-md" name="month" id="selectMonth">
             <?php
-            $iteration = 0;
-            foreach ($monthList as $month) {
-                $iteration++;
-                echo "<option value='${iteration}'>$month</option>";
+            for ($m = 1; $m<=12; $m++) {
+                $month = date('F', mktime(0,0,0,$m, 1, date('Y')));
+                echo "<option value='$m'>$month</option>";
             }
             ?>
         </select>
-        <select class="max-w-md" name="selectYear" id="selectYear">
+        <select required class="max-w-md" name="year" id="selectYear">
             <?php
             $year = (int)date("Y");
             $yearLimit = 2010;
@@ -31,15 +29,7 @@ if(isset($this->params['data'])){
 
     <div class="grid grid-cols-3 max-w-4xl">
 
-        <select multiple class="max-w-lg" name="devices" id="list-added">
-            <?php
-            foreach($devices as $key => $value)
-            {
-                echo "<option value='$key'>$value</option>";
-            }
-            ?>
-            <option value="wuuduheele">RouterPC</option>
-            <option value="ooomaaagaaa">RouterUS</option>
+        <select required multiple class="max-w-lg" name="devices" id="list-added">
         </select>
 
         <button class="items-center w-1/6 max-w-sm" formaction="#">+</button>
@@ -53,51 +43,74 @@ if(isset($this->params['data'])){
 <table>
     <thead>
         <tr>
-            <?php foreach (array_keys($data[0]) as $column) { ?>
-                <th><?php echo $column; ?></th>
-            <?php } ?>
+            <?php //foreach (array_keys($data[0]) as $column) { ?>
+                <th><?php //echo $column; ?></th>
+            <?php //} ?>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($data as $row) { ?>
+        <?php //foreach ($data as $row) { ?>
             <tr>
-                <?php foreach (array_keys($row) as $column) { ?>
-                    <td><?php echo $row[$column]; ?></td>
-                <?php } ?>
+                <?php //foreach (array_keys($row) as $column) { ?>
+                    <td><?php //echo $row[$column]; ?></td>
+                <?php //} ?>
             </tr>
-        <?php } ?>
+        <?php //} ?>
     </tbody>
 </table>
-<script type="text/javascript" src="{{base-url}}/node_modules\@selectize\selectize\dist\js\selectize.js"></script>
-<link rel="stylesheet" type="text/css" href="{{base-url}}/node_modules\@selectize\selectize\dist\css\selectize.css" />
+
+<script type="text/javascript" src="{{base-url}}/node_modules/@selectize/selectize/dist/js/selectize.js"></script>
+<link rel="stylesheet" type="text/css" href="{{base-url}}/node_modules/@selectize/selectize/dist/css\selectize.css" />
 <script type="module">
     import { FormHandler } from "{{base-url}}/javascript/FormHandler.js";
-    let formHandler = new FormHandler('timeFrame', '{{base-url}}/input-test');
+    let formHandler = new FormHandler('timeFrame', '{{base-url}}/view/table', function(response){
+    });
     let devices;
-    const ajax = $.ajax({
-        type: 'POST',
-        url: '{{base-url}}/spreadsheet/devices',
-        success: function(response)
-        {
-            devices = JSON.parse(JSON.stringify(response));
-            console.log(devices.data)
-        },
-        error: function(xhr,status,response)
-        {
-            alert('error at grubbing');
-        }
-    })
     console.log('penis')
+
+    let monthSelect = document.getElementById('selectMonth');
+    let monthOptions = monthSelect.options;
+    let currentMonth = new Date().getMonth() + 1;
+    
+    for(let i = 0; i < monthOptions.length; i++)
+    {
+        if(monthOptions[i].value == currentMonth)
+        {
+            monthSelect.selectedIndex = i;
+            break;
+        }
+    }
+
     let select = $(function() {
         $('#list-added').selectize({
             plugins: ["restore_on_backspace", "clear_button"],
             delimiter: ",",
             persist: false,
             maxItems: null,
-            valueField: "device",
-            labelField: "name",
-            searchField: ["name", "device"],
+            valueField: "idDevice",
+            labelField: "nameDevice",
+            searchField: "nameDevice",
             create: false,
+            preload: true,
+            load: function(query, callback)
+            {
+                // if(!query.length) return callback();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{base-url}}/spreadsheet/devices',
+                    success: function(response)
+                    {
+                        devices = JSON.parse(JSON.stringify(response));
+                        devices = devices.data.LAN.concat(devices.data.WAN);
+                        console.log(devices)
+                        callback(devices);
+                    },
+                    error: function(xhr,status,response)
+                    {
+                        alert('error at grubbing');
+                    }
+                })
+            }
         });
     });
 </script>
