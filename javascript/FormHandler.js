@@ -3,10 +3,11 @@ export class FormHandler
     form;
     actionUrl;
 
-    constructor(formId, actionUrl)
+    constructor(formId, actionUrl, successCallback)
     {
         this.form = document.getElementById(formId);
         this.actionUrl = actionUrl;
+        this.successCallback = successCallback;
         this.form.addEventListener('submit', this.handleForm.bind(this));
     }
 
@@ -34,6 +35,10 @@ export class FormHandler
             {
                 console.log(response);
                 this.form.reset();
+                if(this.successCallback)
+                {
+                    this.successCallback(response);
+                }
             }.bind(this),
             error: function(xhr, status, response)
             {
