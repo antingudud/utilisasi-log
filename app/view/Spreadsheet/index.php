@@ -1,7 +1,10 @@
 <?php
 if(isset($this->params['data'])){
     $data = $this->params['data'];
-    $devices = $data['devices'];
+    if(isset($data['table']))
+    {
+        $table = $data['table'];
+    }
 }
 ?>
 
@@ -39,49 +42,34 @@ if(isset($this->params['data'])){
         <button class="inline-block button" type="submit" id="submitTimeFrame">Go</button>
     </div>
 </form>
-<?php print_r($devices) ?>
+
+<?php if(isset($table)) :?>
+<?php //var_dump($table) ?>
 <table>
+    <?php //print_r($table)?>
     <thead>
         <tr>
-            <?php //foreach (array_keys($data[0]) as $column) { ?>
-                <th><?php //echo $column; ?></th>
-            <?php //} ?>
+            <?php foreach (array_keys($table[0]) as $column) { ?>
+                <th><?php echo ucfirst($column); ?></th>
+            <?php } ?>
         </tr>
     </thead>
     <tbody>
-        <?php //foreach ($data as $row) { ?>
+        <?php foreach ($table as $row) { ?>
             <tr>
-                <?php //foreach (array_keys($row) as $column) { ?>
-                    <td><?php //echo $row[$column]; ?></td>
-                <?php //} ?>
+                <?php foreach (array_keys($row) as $column) { ?>
+                    <td><?php echo $row[$column]; ?></td>
+                <?php } ?>
             </tr>
-        <?php //} ?>
+        <?php } ?>
     </tbody>
 </table>
+<?php endif; ?>
 
 <script type="text/javascript" src="{{base-url}}/node_modules/@selectize/selectize/dist/js/selectize.js"></script>
-<link rel="stylesheet" type="text/css" href="{{base-url}}/node_modules/@selectize/selectize/dist/css\selectize.css" />
+<link rel="stylesheet" type="text/css" href="{{base-url}}/node_modules/@selectize/selectize/dist/css/selectize.css" />
 <script type="module">
-    import { FormHandler } from "{{base-url}}/javascript/FormHandler.js";
-    let formHandler = new FormHandler('timeFrame', '{{base-url}}/view/table', function(response){
-    });
-    let devices;
-    console.log('penis')
-
-    let monthSelect = document.getElementById('selectMonth');
-    let monthOptions = monthSelect.options;
-    let currentMonth = new Date().getMonth() + 1;
-    
-    for(let i = 0; i < monthOptions.length; i++)
-    {
-        if(monthOptions[i].value == currentMonth)
-        {
-            monthSelect.selectedIndex = i;
-            break;
-        }
-    }
-
-    let select = $(function() {
+    $( function () {let select = $(function() {
         $('#list-added').selectize({
             plugins: ["restore_on_backspace", "clear_button"],
             delimiter: ",",
@@ -103,14 +91,63 @@ if(isset($this->params['data'])){
                         devices = JSON.parse(JSON.stringify(response));
                         devices = devices.data.LAN.concat(devices.data.WAN);
                         console.log(devices)
+                        console.log('WOWEEE');
                         callback(devices);
                     },
                     error: function(xhr,status,response)
                     {
+                        console.error("error");
                         alert('error at grubbing');
                     }
                 })
             }
         });
+    })});
+    import { FormHandler } from "{{base-url}}/javascript/FormHandler.js";
+    let formHandler = new FormHandler('timeFrame', '{{base-url}}/view/table', function(response){
+        const selectedOptions = {
+            month: $('#selectMonth').val(),
+            year: $('#selectYear').val(),
+        }
+        localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
+        // console.log(JSON.stringify({data: response}))
+        $.ajax({
+            type: 'POST',
+            url: '{{base-url}}/view/spreadsheet',
+            data: {data: response},
+            success: function(resp)
+            {
+                console.log('Success');
+                $('body').html(resp);
+            },
+            error: function (xhr, status, resp)
+            {
+                console.error(xhr + ' ' + status + ' ' + ' ' + resp)
+            }
+        });
     });
+    let devices;
+    console.log('start')
+
+    // Select current month in option
+    let monthSelect = document.getElementById('selectMonth');
+    let monthOptions = monthSelect.options;
+    let currentMonth = new Date().getMonth() + 1;
+    
+    const storedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+    if(storedOptions){
+        $('#selectMonth').val(storedOptions.month);
+        $('#selectYear').val(storedOptions.year);
+    } else {    
+        for(let i = 0; i < monthOptions.length; i++)
+        {
+            if(monthOptions[i].value == currentMonth)
+            {
+                monthSelect.selectedIndex = i;
+                break;
+            }
+        }
+    }
+
+    
 </script>

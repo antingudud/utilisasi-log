@@ -12,23 +12,22 @@ class SpreadsheetController
 
     public function index(array $data = null)
     {
+        $params=['data' => [
+            'devices' => ''
+        ]];
+
         if(isset($data))
         {
-            $validation = $this->validate($data);
-            if($validation)
+            if(isset($data['data']))
             {
-                $year = $data['year'];
-                $month = $data['month'];
-                $devices = $data['devices'];
-            } else if(is_array($validation) && isset($validation['status']) && $validation['status'] === "exception")
+                $data = $data['data'];
+                $params['data']['table'] = $data;
+            } else if(!is_array($data))
             {
                 // Do exception handling
             }
         }
         
-        $params=['data' => [
-            'devices' => ''
-        ]];
         $view = new View('Spreadsheet/index', $params);
         return $view->render();
     }
