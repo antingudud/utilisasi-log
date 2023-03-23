@@ -67,6 +67,10 @@ $router->post('view/table', function() {
     $controller = new SpreadsheetController();
     echo $controller->populateTable($_POST['data']);
 });
+$router->post('view/spreadsheet', function () {
+    $controller = new SpreadsheetController();
+    echo $controller->index($_POST);
+});
 $router->get('test', function() use ($repoTr)
 {
     echo $repoTr->cookSpreadsheet(['43ert2sf', 'mb894js'], 8, 2022);

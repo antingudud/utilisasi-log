@@ -34,11 +34,11 @@ export class FormHandler
             success: function(response)
             {
                 console.log(response);
-                this.form.reset();
                 if(this.successCallback)
                 {
                     this.successCallback(response);
                 }
+                this.form.reset();
             }.bind(this),
             error: function(xhr, status, response)
             {
