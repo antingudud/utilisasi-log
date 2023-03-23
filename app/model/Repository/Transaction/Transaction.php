@@ -63,25 +63,25 @@ class Repo
 
         $query1 = "SELECT GROUP_CONCAT(DISTINCT
                 CONCAT(
-                    'ifnull(SUM(case when idDevice = ''',
-                    transaction.idDevice,
+                    'COALESCE(SUM(case when idDevice = ''',
+                    device.idDevice,
                     ''' then TRIM(download)+0 end), 0) AS `',
-                    transaction.idDevice, 'download', '`'
+                    device.idDevice, 'download', '`'
                 ),
                 CONCAT(
-                    ', ifnull(SUM(case when idDevice = ''',
-                    transaction.idDevice,
+                    ', COALESCE(SUM(case when idDevice = ''',
+                    device.idDevice,
                     ''' then TRIM(upload)+0 end), 0) AS `',
-                    transaction.idDevice, 'upload', '`'
+                    device.idDevice, 'upload', '`'
                 ),
                 CONCAT(
-                    ', ifnull(MAX(case when idDevice = ''',
-                    transaction.idDevice,
+                    ', COALESCE(MAX(case when idDevice = ''',
+                    device.idDevice,
                     ''' then idTrx end), 0) AS `',
-                    transaction.idDevice, 'id', '`'
+                    device.idDevice, 'id', '`'
                 )
         )
-        FROM transaction LEFT JOIN device ON transaction.idDevice = device.idDevice WHERE device.idDevice in ($placeholders)";
+        FROM device LEFT JOIN transaction ON transaction.idDevice = device.idDevice WHERE device.idDevice in ($placeholders)";
 
         $stmt1 = $db->prepare($query1);
         $stmt1->bind_param($idTypes, ...$ids);
