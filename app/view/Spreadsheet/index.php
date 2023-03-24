@@ -44,13 +44,13 @@ if(isset($this->params['data'])){
 </form>
 
 <?php if(isset($table)) :?>
-<?php //var_dump($table) ?>
+<?php var_dump($table) ?>
 <table>
     <?php //print_r($table)?>
     <thead>
         <tr>
             <?php foreach (array_keys($table[0]) as $column) { ?>
-                <th><?php echo ucfirst($column); ?></th>
+                <th <?php if($column === "date"): echo "class='w-56'";endif; ?>><?php echo ucfirst($column); ?></th>
             <?php } ?>
         </tr>
     </thead>
@@ -118,7 +118,10 @@ if(isset($this->params['data'])){
             success: function(resp)
             {
                 console.log('Success');
-                $('body').html(resp);
+                let newDoc = document.open("text/html", "replace");
+                newDoc.write(resp);
+                newDoc.close();
+                // $(document).html(resp);
             },
             error: function (xhr, status, resp)
             {
