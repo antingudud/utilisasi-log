@@ -79,7 +79,8 @@ class Repo
                     device.idDevice,
                     ''' then idTrx end), 0) AS `',
                     device.idDevice, 'id', '`'
-                )
+                ),
+                CONCAT(', MAX(''', device.nameDevice, ''')', 'AS `', device.idDevice, 'name', '`')
         )
         FROM device LEFT JOIN transaction ON transaction.idDevice = device.idDevice WHERE device.idDevice in ($placeholders)";
 
