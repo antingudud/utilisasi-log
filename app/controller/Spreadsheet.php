@@ -6,6 +6,10 @@ use App\Core\Database\MysqliAdapter;
 use App\View\View;
 use App\Model\Repository\Transaction\Repo;
 use App\Model\Repository\Device\DeviceRepo;
+use App\Model\Repository\User\Repo as UserRepo;
+use DateTime;
+use App\Model\Service\Log\Log;
+use App\Model\Transaction\Exception\RecordExists;
 
 class SpreadsheetController
 {
@@ -30,6 +34,24 @@ class SpreadsheetController
         
         $view = new View('Spreadsheet/index', $params);
         return $view->render();
+    }
+
+    public function makeTable(Array $data)
+    {
+        if(isset($data['data']))
+        {
+            $data = $data['data'];
+            $params['data']['table'] = $data;
+            
+            $view = new View('Spreadsheet/index', $params);
+            return $view->renderOnlyContent();
+        } else
+        {
+            $params['data']['table'] = $data;
+            
+            $view = new View('Spreadsheet/index', $params);
+            return $view->renderOnlyContent();
+        }
     }
 
     public function populateTable(Array $data)
@@ -59,6 +81,141 @@ class SpreadsheetController
         
         $res = $deviceRepo->fetchAll();
         return $res;
+    }
+
+    public function edit(Array $data)
+    {
+        $adapter = new MysqliAdapter(new ConnectDB); 
+        $repo = new Repo($adapter); $repo->setMapper(); $repo->setDeviceRepo();
+        $repoUsr = new UserRepo($adapter); $service = new Log($repo, $repoUsr);
+        $status["status"] = [];
+        $status["action"] = [];
+
+        if(isset($data['date']) && count($data) >= 3)
+        {
+            $date = (DateTime::createFromFormat('D, j M Y', $data['date']))->format('Y-m-d');
+            $ids = [];
+            foreach($data as $key => $value)
+            {
+                if($key === "date") {continue;}
+                if(preg_match('/download|upload/', $key, $matches))
+                {
+                    $id = preg_replace('/download|upload/', '', $key);
+                    $ids[$id][$matches[0]] = $value;
+                    $ids[$id]['date'] = $date;
+                }
+            }
+            // solution
+            $attendanceList = [];
+            foreach($ids as $key => $value)
+            {
+                if($repo->exists($key, $value['date']))
+                {
+                    $attendanceList["existing"][$key]['date'] = $value['date'];
+                    $attendanceList["existing"][$key]['download'] = $value['download'];
+                    $attendanceList["existing"][$key]['upload'] = $value['upload'];
+                    continue;
+                }
+                $attendanceList["new"][$key]['date'] = $value['date'];
+                $attendanceList["new"][$key]['download'] = $value['download'];
+                $attendanceList["new"][$key]['upload'] = $value['upload'];
+            }
+
+            if(isset($attendanceList['new']))
+            {
+                $adapter->beginTransaction();
+                try {
+                    foreach($attendanceList['new'] as $key => $value)
+                    {
+                        $service->log($value['download'], $value['upload'], $value['date'], $key);
+                    }
+                    $adapter->commitTransaction();
+                    $status["logging"] = "success";
+                } catch (\Throwable $th) {
+                    $status["logging"] = "failed";
+                    $adapter->rollbackTransaction();
+                }
+            }
+            if(isset($attendanceList['existing']))
+            {
+                $updateList = Array();
+                foreach($attendanceList['existing'] as $idDevice => $details)
+                {
+                    $updateList[] = array(
+                        "idDevice" => $idDevice,
+                        "download" => $details["download"],
+                        "upload" => $details["upload"],
+                        "dateTime" => $details["date"]
+                    );
+                }
+                if($repo->update($updateList))
+                {
+                    $status["updating"] = "success";
+                } else
+                {
+                    $status["updating"] = "failed";
+                }
+            }
+
+            if($status['updating'] == "success" && $status['logging'] == "success")
+            {
+                $status['status'] = "success";
+                $status["action"] = "finished";
+            } else if($status['updating'] == "success" || $status['logging'] == "success")
+            {
+                $status['status'] = "mid";
+                $status["action"] = "finished";
+            } else{
+                $status['status'] = "failed";
+                $status["action"] = "finished";
+            }
+            // 
+
+            // print_r($attendanceList);
+            print_r($status);
+            return;
+            $adapter->beginTransaction();
+            try {
+                $status["action"] = "logging";
+                foreach ($ids as $key => $value)
+                {
+                    if($service->log($value['download'], $value['upload'], $value['date'], $key))
+                    {
+                        $status["status"] = "ok";
+                    } else {
+                        $status["status"] = "bad";
+                    }
+                }
+                // if($status["status"] === "ok")
+                // {
+                    // Do notification;
+                    $adapter->commitTransaction();
+                    echo "1";
+                // }
+            } catch (\Throwable $th) {
+                $adapter->rollbackTransaction();
+                $status["status"] = "exception";
+                // echo get_class($th);
+                // print_r($th);
+                if($th instanceof RecordExists );
+                {
+                    $status["action"] = "updating";
+                    $status["status"] = "ok";
+                    $updateList = Array();
+                    foreach($ids as $idDevice => $details)
+                    {
+                        $updateList[] = array(
+                            "idDevice" => $idDevice,
+                            "download" => $details["download"],
+                            "upload" => $details["upload"],
+                            "dateTime" => $details["date"]
+                        );
+                    }
+                    $repo->update($updateList);
+                    echo "update";
+                }
+            }
+        }
     }
 
     /** 

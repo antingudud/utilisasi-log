@@ -49,8 +49,8 @@ class Repo
      * Cook up custom spreadsheet that will return as JSON
      * 
      * @param array $ids | An array of device id's
-     * @param array $month | Month in numeric (0...12)
-     * @param array $year | Year in four digit numeric (YYYY)
+     * @param int $month | Month in numeric (0...12)
+     * @param int $year | Year in four digit numeric (YYYY)
      * @return array json
      */
     public function cookSpreadsheet(Array $ids, int $month, int $year)
@@ -89,15 +89,70 @@ class Repo
         $stmt1->execute();
         $result = $stmt1->get_result()->fetch_row()[0];
 
-        $query = "SELECT DATE_FORMAT(dateTime, '%a, %e, %b, %Y') AS date, " . $result . " FROM transaction WHERE (DATE_FORMAT(dateTime, '%c') = ? AND DATE_FORMAT(dateTime, '%Y') = ?) GROUP BY dateTime ASC";
+        $query = "SELECT DATE_FORMAT(dateTime, '%a, %e %b %Y') AS date, " . $result . " FROM transaction WHERE (DATE_FORMAT(dateTime, '%c') = ? AND DATE_FORMAT(dateTime, '%Y') = ?) GROUP BY dateTime ASC";
         $stmt = $db->prepare($query);
         $stmt->bind_param("ii", $month, $year);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        if($result == NULL || count($result) < cal_days_in_month(CAL_GREGORIAN, $month, $year))
+        {
+            $result = $this->generateEmptytable($ids, $month, $year, $result);
+        }
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($result);
         $db->close();
         die();
+    }
+
+    protected function generateEmptytable(Array $ids, int $month, int $year, ?array $result = NULL)
+    {
+        $month = date($month);
+        $year = date($year);
+        $numDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $data = array();
+        $names = $this->getName($ids);
+        $existing = [];
+
+        if($result != NULL)
+        {
+            foreach($result as $key => $value)
+            {
+                $existing[] = $value['date'];
+            }
+        }
+
+        $i = 0;
+        for ($day = 1; $day <= $numDays; $day++) {
+            $timestamp = mktime(0, 0, 0, $month, $day, $year);
+            $formattedDate = date('D, j M Y', $timestamp);
+            $data[$i]["date"] = $formattedDate;
+                foreach($ids as $key => $value)
+                {
+                    $data[$i][$value."download"] = 0;
+                    $data[$i][$value."upload"] = 0;
+                    $data[$i][$value."id"] = 0;
+                    foreach($names as $name) {
+                        if($name['idDevice'] == $value) {
+                            $data[$i][$value."name"] = $name["nameDevice"];
+                            break;
+                        }
+                    }
+                }
+            $i++;
+        }
+        return $data;
+    }
+
+    public function getName(Array $ids)
+    {
+        $db = (new ConnectDB())->connectTo();
+        $placeholders = str_repeat('?, ', count($ids) - 1) . '?';
+        $types = str_repeat("s", count($ids));
+        $query = "SELECT idDevice, nameDevice FROM device WHERE idDevice IN (" . $placeholders . ") ORDER BY idDevice";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param($types, ...$ids);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
     public function findById(String $id)
@@ -105,6 +160,13 @@ class Repo
         return $this->mapper->find(['idTrx' => $id], true);
     }
 
+    /**
+     * Check if a record exists in that date
+     * 
+     * @param string $idDevice
+     * @param string $date 'YYYY-MM-DD'
+     * @return string|bool If found, return the id of the record/ Otherwise return false
+     */
     public function exists(String $idDevice, String $date)
     {
         return $this->adapter->select(['COUNT(*)'], 'transaction', ['dateTime' => $date, 'idDevice' => $idDevice])->fetch_row()[0] ? true : false;
@@ -215,7 +277,12 @@ class Repo
     {
         foreach($rows as $key => $value)
         {
+            if(isset($value['idTrx'])){
             $collection[] = $this->mapper->find(['idTrx' => $value['idTrx']], true);
+            } else if(isset($value['dateTime']))
+            {
+                $collection[] = $this->mapper->find(['idDevice' => $value['idDevice'],'dateTime' => $value['dateTime']], true);
+            }
         }
         return $collection;
     }

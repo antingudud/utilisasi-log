@@ -69,7 +69,7 @@ $router->post('view/table', function() {
 });
 $router->post('view/spreadsheet', function () {
     $controller = new SpreadsheetController();
-    echo $controller->index($_POST);
+    echo $controller->makeTable($_POST);
 });
 $router->get('test', function() use ($repoTr)
 {
@@ -90,6 +90,10 @@ $router->mount('/spreadsheet', function() use ($router){
     $router->post('/devices', function() {
         $spreadsheet = new SpreadsheetController();
         return $spreadsheet->getDeviceList();
+    });
+    $router->post('edit', function() {
+        $spreadsheet = new SpreadsheetController();
+        return $spreadsheet->edit($_POST);
     });
 });
 $router->mount('/submit', function() use ($router, $Home, $logserv, $updateserv, $delserv, $sqladapter) {

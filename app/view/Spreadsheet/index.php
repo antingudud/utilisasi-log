@@ -45,12 +45,13 @@ if(isset($this->params['data'])){
 
 <?php if(isset($table)) :?>
 <?php var_dump($table) ?>
-<table>
+<table id="table">
     <?php //print_r($table)?>
     <thead>
         <tr>
             <?php foreach (array_keys($table[0]) as $column) { ?>
-                <th <?php if($column === "date"): echo "class='w-56'";endif; ?>><?php echo ucfirst($column); ?></th>
+                <?php if(preg_match('/(name|id)/', $column)) : continue; endif; ?>
+                <th <?php if(preg_match('/id/', $column)){echo "class='hidden'";}; if(preg_match("/(date|name|download|id|upload)/", $column, $matches)): echo "name='$matches[0]' class='w-56'";endif; ?>><?php echo ucfirst($column); ?></th>
             <?php } ?>
         </tr>
     </thead>
@@ -58,7 +59,8 @@ if(isset($this->params['data'])){
         <?php foreach ($table as $row) { ?>
             <tr>
                 <?php foreach (array_keys($row) as $column) { ?>
-                    <td><?php echo $row[$column]; ?></td>
+                    <?php if(preg_match('/(name|id)/', $column)) : continue; endif; ?>
+                    <td <?php if(preg_match('/id/', $column)){echo "class='hidden'";}; if(!preg_match('/date/', $column)){echo "name='$column'"; } ?> ><?php echo $row[$column]; ?></td>
                 <?php } ?>
             </tr>
         <?php } ?>
@@ -66,6 +68,8 @@ if(isset($this->params['data'])){
 </table>
 <?php endif; ?>
 
+<link rel="stylesheet" href="{{base-url}}/vendor/DataTables/datatables.min.css"><script src="{{base-url}}/vendor/DataTables/datatables.min.js"></script>
+<script src="{{base-url}}/vendor/jquery-tabledit-1.2.3/jquery.tabledit.js"></script>
 <script type="text/javascript" src="{{base-url}}/node_modules/@selectize/selectize/dist/js/selectize.js"></script>
 <link rel="stylesheet" type="text/css" href="{{base-url}}/node_modules/@selectize/selectize/dist/css/selectize.css" />
 <script type="module">
@@ -103,6 +107,47 @@ if(isset($this->params['data'])){
             }
         });
     })});
+    $(document).ready(function() {
+        $('#table').DataTable({
+            paging: false,
+            ordering: false,
+            searching: false
+        });
+        if($('#table').length)
+        {
+            // let editerator = 
+            $('#table').Tabledit({
+                url: '{{base-url}}/spreadsheet/edit',
+                deleteButton: false,
+                saveButton: false,
+                autoFocus: false,
+                editButton: true,
+                columns: {
+                    identifier: [0, 'date'],
+                    editable: <?php
+                        if(isset($table)){
+                            $iterator = 1;
+                            $cowsay = [];
+                            foreach (array_keys($table[0]) as $column) {
+                                if(!preg_match('/download|upload/', $column)) {continue;}
+                                $cowsay[] = [$iterator ,$column ];
+                                $iterator++;
+                            }
+                        echo json_encode($cowsay);
+                        }
+                        else
+                        {
+                            echo "[]";
+                        }
+                        ?>
+                },
+                onSuccess: function (data, textStatus, jqXHR)
+                {
+                    console.log({data,textStatus,jqXHR});
+                }
+            })
+        }
+    })
     import { FormHandler } from "{{base-url}}/javascript/FormHandler.js";
     let formHandler = new FormHandler('timeFrame', '{{base-url}}/view/table', function(response){
         const selectedOptions = {
@@ -118,10 +163,10 @@ if(isset($this->params['data'])){
             success: function(resp)
             {
                 console.log('Success');
-                let newDoc = document.open("text/html", "replace");
-                newDoc.write(resp);
-                newDoc.close();
-                // $(document).html(resp);
+                // let newDoc = document.open("text/html", "replace");
+                // newDoc.write(resp);
+                // newDoc.close();
+                $('#mainbody').html(resp);
             },
             error: function (xhr, status, resp)
             {
