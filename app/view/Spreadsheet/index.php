@@ -44,7 +44,7 @@ if(isset($this->params['data'])){
 </form>
 
 <?php if(isset($table)) :?>
-<?php var_dump($table) ?>
+<?php //var_dump($table) ?>
 <table id="table">
     <?php //print_r($table)?>
     <thead>
@@ -94,8 +94,6 @@ if(isset($this->params['data'])){
                     {
                         devices = JSON.parse(JSON.stringify(response));
                         devices = devices.data.LAN.concat(devices.data.WAN);
-                        console.log(devices)
-                        console.log('WOWEEE');
                         callback(devices);
                     },
                     error: function(xhr,status,response)
@@ -144,6 +142,10 @@ if(isset($this->params['data'])){
                 onSuccess: function (data, textStatus, jqXHR)
                 {
                     console.log({data,textStatus,jqXHR});
+                },
+                onFail: function(jqXHR, textStatus, errorThrown)
+                {
+                    
                 }
             })
         }

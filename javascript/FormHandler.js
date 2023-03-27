@@ -33,7 +33,6 @@ export class FormHandler
             data: {data: data},
             success: function(response)
             {
-                console.log(response);
                 if(this.successCallback)
                 {
                     this.successCallback(response);
@@ -42,7 +41,6 @@ export class FormHandler
             }.bind(this),
             error: function(xhr, status, response)
             {
-                console.log(response),
                 this.form.reset();
             }.bind(this)
         })

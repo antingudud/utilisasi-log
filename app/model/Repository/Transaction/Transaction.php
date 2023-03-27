@@ -111,13 +111,14 @@ class Repo
         $numDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $data = array();
         $names = $this->getName($ids);
-        $existing = [];
 
-        if($result != NULL)
+        if(isset($result) && $result != NULL)
         {
             foreach($result as $key => $value)
             {
-                $existing[] = $value['date'];
+                $date = $value["date"];
+                unset($value["date"]);
+                $existing[$date] = $value;
             }
         }
 
@@ -125,12 +126,14 @@ class Repo
         for ($day = 1; $day <= $numDays; $day++) {
             $timestamp = mktime(0, 0, 0, $month, $day, $year);
             $formattedDate = date('D, j M Y', $timestamp);
-            $data[$i]["date"] = $formattedDate;
+            if(isset($existing) && isset($existing[$formattedDate]))
+            {
+                $data[$i]["date"] = $formattedDate;
                 foreach($ids as $key => $value)
                 {
-                    $data[$i][$value."download"] = 0;
-                    $data[$i][$value."upload"] = 0;
-                    $data[$i][$value."id"] = 0;
+                    $data[$i][$value."download"] = $existing[$formattedDate][$value."download"];
+                    $data[$i][$value."upload"] = $existing[$formattedDate][$value."upload"];
+                    $data[$i][$value."id"] = $existing[$formattedDate][$value."id"];
                     foreach($names as $name) {
                         if($name['idDevice'] == $value) {
                             $data[$i][$value."name"] = $name["nameDevice"];
@@ -138,6 +141,22 @@ class Repo
                         }
                     }
                 }
+                $i++;
+                continue;
+            }
+            $data[$i]["date"] = $formattedDate;
+            foreach($ids as $key => $value)
+            {
+                $data[$i][$value."download"] = 0;
+                $data[$i][$value."upload"] = 0;
+                $data[$i][$value."id"] = 0;
+                foreach($names as $name) {
+                    if($name['idDevice'] == $value) {
+                        $data[$i][$value."name"] = $name["nameDevice"];
+                        break;
+                    }
+                }
+            }
             $i++;
         }
         return $data;

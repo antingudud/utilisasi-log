@@ -66,12 +66,16 @@ class SpreadsheetController
             if(is_string($devices))
             {
                 $devices = [$devices];
+            } else if(is_array($devices) && count($devices) > 5)
+            {
+                $devices = array_slice($devices, 0 ,5);
             }
             $spreadsheet = json_decode(strval($repo->cookSpreadsheet($devices, $month, $year)), true);
         } else if(is_array($validation) && isset($validation['status']) && $validation['status'] === "exception")
         {
             // Do exception handling
         }
+        echo json_encode($spreadsheet);
     }
 
     public function getDeviceList()
@@ -89,7 +93,8 @@ class SpreadsheetController
         $repo = new Repo($adapter); $repo->setMapper(); $repo->setDeviceRepo();
         $repoUsr = new UserRepo($adapter); $service = new Log($repo, $repoUsr);
         $status["status"] = [];
-        $status["action"] = [];
+        $status["action"] = "input";
+        $status["message"] = "request done";
 
         if(isset($data['date']) && count($data) >= 3)
         {
@@ -157,76 +162,64 @@ class SpreadsheetController
                 }
             }
 
-            if($status['updating'] == "success" && $status['logging'] == "success")
+            if( isset($status['logging'], $status['updating']) )
             {
-                $status['status'] = "success";
-                $status["action"] = "finished";
-            } else if($status['updating'] == "success" || $status['logging'] == "success")
+                if( ( $status["logging"] == "success" || $status["logging"] === TRUE) && ( $status["updating"] == "success" || $status["updating"] === TRUE) ) 
+                {
+                    $status["status"] = "success";
+                } else if ( ( $status["logging"] == "success" || $status["logging"] === TRUE  ) || ( $status["updating"] == "success" || $status["updating"] === TRUE ) )
+                {
+                    $status["status"] = "partial success";
+                } else if( ( $status["logging"] == "failed" || $status["logging"] === FALSE ) && ( $status["updating"] == "failed" || $status["updating"] === FALSE ) )
+                {
+                    $status["status"] = "failed";
+                } else if( ( $status["logging"] == "failed" || $status["logging"] === FALSE ) || ( $status["updating"] == "failed" || $status["updating"] === FALSE ) )
+                {
+                    $status["status"] = "failed";
+                }  else
+                {
+                    $status["status"] = "failed";
+                    $status["action"] = "not run";
+                }
+            } else if( isset($status["updating"]) )
             {
-                $status['status'] = "mid";
-                $status["action"] = "finished";
-            } else{
-                $status['status'] = "failed";
-                $status["action"] = "finished";
+                $update = $status["updating"];
+                if($update == "success" || $update === true)
+                {
+                    $status["status"] = "success";
+                } else
+                {
+                    $status["status"] = "failed";
+                }
+            } else if( isset($status["logging"]) )
+            {
+                $log = $status["logging"];
+                if($log == "success" || $log === true)
+                {
+                    $status["status"] = "success";
+                } else
+                {
+                    $status["status"] = "failed";
+                }
+            } else {
+                $status["status"] = "failed";
+                $status["message"] = "Not run";
             }
-            // 
 
-            // print_r($attendanceList);
-            print_r($status);
-            return;
-            $adapter->beginTransaction();
-            try {
-                $status["action"] = "logging";
-                foreach ($ids as $key => $value)
-                {
-                    if($service->log($value['download'], $value['upload'], $value['date'], $key))
-                    {
-                        $status["status"] = "ok";
-                    } else {
-                        $status["status"] = "bad";
-                    }
-                }
-                // if($status["status"] === "ok")
-                // {
-                    // Do notification;
-                    $adapter->commitTransaction();
-                    echo "1";
-                // }
-            } catch (\Throwable $th) {
-                $adapter->rollbackTransaction();
-                $status["status"] = "exception";
-                // echo get_class($th);
-                // print_r($th);
-                if($th instanceof RecordExists );
-                {
-                    $status["action"] = "updating";
-                    $status["status"] = "ok";
-                    $updateList = Array();
-                    foreach($ids as $idDevice => $details)
-                    {
-                        $updateList[] = array(
-                            "idDevice" => $idDevice,
-                            "download" => $details["download"],
-                            "upload" => $details["upload"],
-                            "dateTime" => $details["date"]
-                        );
-                    }
-                    $repo->update($updateList);
-                    echo "update";
-                }
-            }
+            return $this->notif($status["status"], $status["action"], $status["message"]);
         }
     }
 
     /** 
-     * Validates input.
+     * Validates table generation input.
      * 
      * @param array $data Data must be an array with 3 subarrays with the keys of "month", "year", "devices"
      * @return bool|array Returns true if valid, returns error array if invalid.
      */
     protected function validate(Array $data)
     {
-        $error = ["status" => "exception"];
+        $error = ["status" => "failed"];
+        $error["action"] = "validation";
         if(count($data) === 3)
         {
             if(isset($data['month'], $data['year'], $data['devices']))
@@ -327,5 +320,34 @@ class SpreadsheetController
             $error["message"] = "Invalid request, please check your input again.";
             return $error;
         }
+    }
+
+    /**
+     * Return to request
+     * 
+     * @param string $status success|failed|error|exception
+     * @param string $action input|validation|whatever
+     * @param string $message whatever
+     */
+    protected function notif(string $status, string $action, string $message)
+    {
+        if(!isset($status, $action, $message))
+        {
+            $status = "error";
+            $action = "unknown";
+            $message = "Unknown error.";
+            http_response_code(500);
+            echo json_encode(["status" => $status, "action" => $action, "message" => $message]);
+            die();
+        }
+        if(preg_match("/failed|error|exception/", $status))
+        {
+            http_response_code(500);
+        } else if(preg_match("/ok|success/", $status))
+        {
+            http_response_code(200);
+        } else {http_response_code(500);}
+        echo json_encode(["status" => $status, "action" => $action, "message" => $message]);
+        die();
     }
 }
