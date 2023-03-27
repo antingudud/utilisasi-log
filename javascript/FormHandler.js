@@ -31,7 +31,7 @@ export class FormHandler
             type: 'POST',
             url:this.actionUrl,
             data: {data: data},
-            success: function(response)
+            success: function(response, status, jqXHR)
             {
                 if(this.successCallback)
                 {
