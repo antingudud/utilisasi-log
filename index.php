@@ -71,14 +71,6 @@ $router->post('view/spreadsheet', function () {
     $controller = new SpreadsheetController();
     echo $controller->makeTable($_POST);
 });
-$router->get('test', function() use ($repoTr)
-{
-    echo $repoTr->cookSpreadsheet(['43ert2sf', 'mb894js'], 8, 2022);
-});
-$router->get('viewtest', function() {
-    $SpreadsheetController = new SpreadsheetController();
-    echo $SpreadsheetController->index();
-});
 $router->post('input-test', function() {
     print_r($_POST);
 });
@@ -86,7 +78,15 @@ $router->get('import', function() use($Home)
 {
     echo $Home->import();
 });
+$router->get('/devices', function () {
+    $Device = new DeviceController();
+    echo $Device->index();
+});
 $router->mount('/spreadsheet', function() use ($router){
+    $router->get('/', function() {
+        $SpreadsheetController = new SpreadsheetController();
+        echo $SpreadsheetController->index();
+    });
     $router->post('/devices', function() {
         $spreadsheet = new SpreadsheetController();
         return $spreadsheet->getDeviceList();

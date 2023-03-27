@@ -15,17 +15,24 @@
 
 <body>
     <nav class="sticky top-0 z-50 flex items-center h-24 w-screen min-h-full max-h-28 bg-slate-900">
-        <ul class="flex list-none m-0">
-            <li class="mr-6">
-                <a class="text-white hover:text-red-300" href="{{base-url}}/">Home</a>
-            </li>
-            <li class="mr-6">
-                <a class="text-white hover:text-red-300" href="{{base-url}}/viewtest">Spreadsheet</a>
-            </li>
-            <li class="mr-6">
-                <a class="text-white hover:text-red-300" href="{{base-url}}/view/report">Graph</a>
-            </li>
-        </ul>
+        <div class="flex justify-between w-full mr-16 ml-16">
+            <ul class="flex list-none m-0">
+                <li class="mr-6">
+                    <a class="text-white hover:text-red-300" href="{{base-url}}/">Home</a>
+                </li>
+                <li class="mr-6">
+                    <a class="text-white hover:text-red-300" href="{{base-url}}/spreadsheet">Spreadsheet</a>
+                </li>
+                <li class="mr-6">
+                    <a class="text-white hover:text-red-300" href="{{base-url}}/view/report">Graph</a>
+                </li>
+            </ul>
+            <ul class="flex list-none m-0 float-right">
+                <li class="mr-6">
+                    <a class="text-white hover:text-red-300" href="{{base-url}}/devices">+ Device</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 
     <section id="mainbody" class="container col">
