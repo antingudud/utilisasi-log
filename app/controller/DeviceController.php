@@ -13,7 +13,7 @@ class DeviceController
         $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
         // $devices = ;
         $params = ["data" => [
-            "devices" => json_decode($repo->fetchAll(), true)
+            "devices" => $repo->fetchAll()
         ]];
         $view = new View('Device/index', $params);
         return $view->render();

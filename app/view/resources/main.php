@@ -35,7 +35,7 @@
         </div>
     </nav>
 
-    <section id="mainbody" class="container col">
+    <section id="mainbody" class="flex w-screen h-full pr-6 pl-6 pt-6 pb-6 items-center justify-center">
 
         {{content}}
 
