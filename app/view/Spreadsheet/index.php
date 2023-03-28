@@ -45,13 +45,28 @@ if(isset($this->params['data'])){
 
 <?php if(isset($table)) :?>
 <?php //var_dump($table) ?>
-<table id="table">
+<table id="table" class="cell-border stripe order-column table-fixed">
     <?php //print_r($table)?>
     <thead>
-        <tr>
+        <tr id="header-row-top">
+            <?php foreach ($table[0] as $key => $column) { ?>
+                <?php if(preg_match('/download|id|upload/', $key)) {continue;}?>
+                <th <?php
+                if(preg_match("/name|date/", $key, $matches)){
+                    echo "name='$matches[0]' ";
+                }
+                if(preg_match("/name/", $key, $matches)){
+                    echo "class='w-1/6' colspan='2'";
+                } else if(preg_match("/date/", $key, $matches)){
+                    echo "class='w-1/6' rowspan='2'";
+                }; ?>>
+                <?php if(preg_match('/date/', $key)): echo ucfirst($key); else :echo ucfirst($column); endif; ?></th>
+            <?php } ?>
+        </tr>
+        <tr id="header-row-bottom">
             <?php foreach (array_keys($table[0]) as $column) { ?>
-                <?php if(preg_match('/(name|id)/', $column)) : continue; endif; ?>
-                <th <?php if(preg_match('/id/', $column)){echo "class='hidden'";}; if(preg_match("/(date|name|download|id|upload)/", $column, $matches)): echo "name='$matches[0]' class='w-56'";endif; ?>><?php echo ucfirst($column); ?></th>
+                <?php if(preg_match('/(date|name|id)/', $column)) : continue; endif; ?>
+                <th <?php if(preg_match('/date/', $column)){echo "rowspan='2'";}; if(preg_match("/(date|name|download|id|upload)/", $column, $matches)): echo "name='$matches[0]' class='w-1/6 dt-center'";endif; ?>><?php echo ucfirst($matches[0]); ?></th>
             <?php } ?>
         </tr>
     </thead>
@@ -60,7 +75,7 @@ if(isset($this->params['data'])){
             <tr>
                 <?php foreach (array_keys($row) as $column) { ?>
                     <?php if(preg_match('/(name|id)/', $column)) : continue; endif; ?>
-                    <td <?php if(preg_match('/id/', $column)){echo "class='hidden'";}; if(!preg_match('/date/', $column)){echo "name='$column'"; } ?> ><?php echo $row[$column]; ?></td>
+                    <td <?php if(preg_match('/id/', $column)){echo "class='hidden'";}; if(!preg_match('/date/', $column)){echo "name='$column' class='dt-center'"; }?> ><?php echo $row[$column]; ?></td>
                 <?php } ?>
             </tr>
         <?php } ?>
@@ -120,6 +135,12 @@ if(isset($this->params['data'])){
                 saveButton: false,
                 autoFocus: false,
                 editButton: true,
+                buttons: {
+                    edit: {
+                        class: 'btn btn-sm btn-default w-1/6',
+                        html: 'Edit'
+                    }
+                },
                 columns: {
                     identifier: [0, 'date'],
                     editable: <?php
@@ -146,6 +167,12 @@ if(isset($this->params['data'])){
                 onFail: function(jqXHR, textStatus, errorThrown)
                 {
                     
+                },
+                onDraw: function()
+                {
+                    $("#header-row-top th:last-child")
+                    .addClass("w-1/6")
+                    $("#header-row-bottom td:last-child button").remove()
                 }
             })
         }
