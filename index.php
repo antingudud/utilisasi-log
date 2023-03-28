@@ -1,6 +1,7 @@
 <?php
 require_once 'vendor/autoload.php';
 
+use App\Controller\DeviceController;
 use App\Controller\Home;
 use App\Controller\NewDataController;
 use Josantonius\Session\Session;

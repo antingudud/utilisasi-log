@@ -1,13 +1,21 @@
 <?php
 namespace App\Controller;
 
+use App\Core\ConnectDB;
+use App\Core\Database\MysqliAdapter;
+use App\Model\Repository\Device\DeviceRepo;
 use App\View\View;
 
 class DeviceController
 {
     public function index()
     {
-        $view = new View('Device/index');
+        $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
+        // $devices = ;
+        $params = ["data" => [
+            "devices" => json_decode($repo->fetchAll(), true)
+        ]];
+        $view = new View('Device/index', $params);
         return $view->render();
     }
 }
