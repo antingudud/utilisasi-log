@@ -83,8 +83,12 @@ class SpreadsheetController
         $adapter = new MysqliAdapter(new ConnectDB);
         $deviceRepo = new DeviceRepo($adapter);
         
-        $res = $deviceRepo->fetchAll();
-        return $res;
+        $data = $deviceRepo->fetchAll();
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(array('data' => $data));
+        die();
+        // $res = $deviceRepo->fetchAll();
+        // return $res;
     }
 
     public function edit(Array $data)

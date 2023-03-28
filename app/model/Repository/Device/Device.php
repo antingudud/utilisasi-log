@@ -54,8 +54,7 @@ class DeviceRepo
             'WAN' => $wanResult
         ];
         
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(array('data' => $data));
+        return $data;
     }
 
     public function create(String $idDevice)
