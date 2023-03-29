@@ -21,13 +21,33 @@ class DeviceController
 
     public function edit(Array $POST)
     {
+        $status = [
+            "status" => "",
+            "action" => "edit",
+            "message" => ""
+        ];
         $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
         if(!isset($POST['data']))
         {
             return;
         }
         $data = $POST['data'];
-        return $repo->update($data['name'], $data['id'], $data['category']);
+        try
+        {
+            $repo->update($data['name'], $data['id'], $data['category']);
+            $status["status"] = "success";
+            $status["message"] = "Edit success.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (\Exception $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Edit failed.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        }
     }
 
     public function add(Array $POST)

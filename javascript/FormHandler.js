@@ -37,11 +37,9 @@ export class FormHandler
                 {
                     this.successCallback(response);
                 }
-                this.form.reset();
             }.bind(this),
             error: function(xhr, status, response)
             {
-                this.form.reset();
             }.bind(this)
         })
     }

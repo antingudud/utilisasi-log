@@ -46,11 +46,15 @@ if(isset($this->params['data']))
 
 <script type="module">
     import { FormHandler } from "{{base-url}}/javascript/FormHandler.js";
+    import { popup } from "{{base-url}}/javascript/notification.js";
+
     $(document).ready(function() {
         const initialName = $("#device-name").val();
         const initialCategory = $("#category").val();
-        let formHandler = new FormHandler('device-edit', '{{base-url}}/device/edit', function() {
-            window.location.replace("{{base-url}}/devices");
+        let formHandler = new FormHandler('device-edit', '{{base-url}}/device/edit', function(response) {
+            // window.location.replace("{{base-url}}/devices");
+            let pop = popup("{{base-url}}", response);
+            // console.log(response)
         })
         $("#reset").on('click', function(e) {
             e.preventDefault();
