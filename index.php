@@ -87,6 +87,18 @@ $router->get('/device', function () {
     $Device = new DeviceController();
     echo $Device->detail($_GET);
 });
+$router->post('device/remove', function () {
+    $Device = new DeviceController();
+    echo $Device->remove($_POST);
+});
+$router->post('/device/edit', function() {
+    $Device = new DeviceController();
+    return $Device->edit($_POST);
+});
+$router->post('/devices/new', function() {
+    $Device = new DeviceController();
+    return $Device->add($_POST);
+});
 $router->mount('/spreadsheet', function() use ($router){
     $router->get('/', function() {
         $SpreadsheetController = new SpreadsheetController();

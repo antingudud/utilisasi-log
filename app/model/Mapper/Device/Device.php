@@ -40,9 +40,9 @@ class DeviceMapper implements DvcInterface
     }
 
     /**
-     * Save object to the database
+     * Save object to the database. If it exists it should've update it, but I am running out of time.
      * @param Device $device
-     * @return bool true|false
+     * @return bool|RecordExists true|false|RecordExists
      */
     public function save(Device $device)
     {

@@ -14,7 +14,7 @@ if(isset($this->params['data']))
     </div>
     <section class="flex flex-col w-full ml-auto pt-6 pb-6 pl-6 pr-6 max-w-2xl">
         <h3>Add new device</h3>
-        <form class="flex flex-row" action="">
+        <form id="device-new" class="flex flex-row" action="">
             <select required class="w-2/4 mr-4" name="category" id="category">
                 <option value="LAN">LAN</option>
                 <option value="WAN">WAN</option>
@@ -26,7 +26,7 @@ if(isset($this->params['data']))
     
     <hr class="mt-12">
 
-    <div class="border-2 border-gray-100 rounded-2xl border-solid flex mt-12">
+    <div class="border-2 border-gray-200 rounded-2xl border-solid flex mt-12">
         <div class="grid w-full grid-cols-2">
             <?php if(isset($devices)) :?>
                 <?php foreach($devices as $key => $value): ?>
@@ -45,5 +45,11 @@ if(isset($this->params['data']))
     </div>
 </div>
 
-<script>
+<script type="module">
+    import { FormHandler } from "{{base-url}}/javascript/FormHandler.js";
+    $(document).ready(function () {
+        let handleform = new FormHandler("device-new", "{{base-url}}/devices/new", function() {
+
+        });
+    })
 </script>

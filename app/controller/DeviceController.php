@@ -19,12 +19,50 @@ class DeviceController
         return $view->render();
     }
 
+    public function edit(Array $POST)
+    {
+        $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
+        if(!isset($POST['data']))
+        {
+            return;
+        }
+        $data = $POST['data'];
+        return $repo->update($data['name'], $data['id'], $data['category']);
+    }
+
+    public function add(Array $POST)
+    {
+        $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
+        if(!isset($POST['data']))
+        {
+            return;
+        }
+        $data = $POST['data'];
+        return $repo->createNew($data['name'], $data['category']);
+    }
+
+    public function remove(Array $POST)
+    {
+        $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $data = $data['data'];
+
+        return $repo->remove($data['id']);
+    }
+
     /**
      * @param array $GET $_GET device = id
      */
     public function detail(Array $GET)
     {
-        $id = $GET['device'];
+        if(isset($GET['device']))
+        {
+            $id = $GET['device'];
+        } else
+        {
+            $id = "undefined";
+        }
         // $idvalidate = $this->validateId($id);
         // if(is_array($idvalidate))
         // {
