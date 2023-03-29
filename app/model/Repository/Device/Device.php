@@ -31,6 +31,30 @@ class DeviceRepo
     }
 
     /**
+     * Get device by Id
+     * 
+     * @param string $id
+     * @return array [id, name, category]
+     */
+    public function fetchById(String $id)
+    {
+        $id = filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        $db = (new ConnectDB)->connectTo();
+        $query = "SELECT idDevice, nameDevice, nameCategory FROM device LEFT JOIN category ON device.idCategory = category.idCategory WHERE idDevice = ? ORDER BY idDevice";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC)[0];
+        $data = [
+            "id" => $result['idDevice'],
+            "name" => $result['nameDevice'],
+            "category" => $result['nameCategory']
+        ];
+
+        return $data;
+    }
+    /**
      * Get list of all devices from LAN and WAN category;
      * 
      * @return string | return list of LAN and WAN devices in JSON {data: [LAN: [{idDevice: "...", nameDevice: "...", nameCategory: "..."}, ...], WAN: [{idDevice: "...", nameDevice: "...", nameCategory: "..."}, ...]}

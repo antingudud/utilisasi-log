@@ -83,6 +83,10 @@ $router->get('/devices', function () {
     $Device = new DeviceController();
     echo $Device->index();
 });
+$router->get('/device', function () {
+    $Device = new DeviceController();
+    echo $Device->detail($_GET);
+});
 $router->mount('/spreadsheet', function() use ($router){
     $router->get('/', function() {
         $SpreadsheetController = new SpreadsheetController();

@@ -8,9 +8,11 @@ if(isset($this->params['data'])){
 }
 ?>
 <div class="flex flex-col w-full">
-    <form class="grid" id="timeFrame" action="" method="POST">
-        <div class="grid grid-cols-2 max-w-4xl">
-            <select required class="max-w-md" name="month" id="selectMonth">
+    <div class="flex-grow-0 flex-shrink-0">
+    </div>
+    <form class="grid ml-auto w-full max-w-4xl" id="timeFrame" action="" method="POST">
+        <div class="pb-3 flex flex-row items-center justify-center w-full max-w-4xl">
+            <select required class="mr-3 flex-1 max-w-md" name="month" id="selectMonth">
                 <?php
                 for ($m = 1; $m<=12; $m++) {
                     $month = date('F', mktime(0,0,0,$m, 1, date('Y')));
@@ -18,7 +20,7 @@ if(isset($this->params['data'])){
                 }
                 ?>
             </select>
-            <select required class="max-w-md" name="year" id="selectYear">
+            <select required class="flex-1 max-w-md" name="year" id="selectYear">
                 <?php
                 $year = (int)date("Y");
                 $yearLimit = 2010;
@@ -30,57 +32,56 @@ if(isset($this->params['data'])){
             </select>
         </div>
 
-        <div class="grid grid-cols-3 max-w-4xl">
+        <div class="pb-3 flex flex-row w-full max-w-4xl">
 
-            <select required multiple class="max-w-lg" name="devices" id="list-added">
+            <select required multiple class="mr-3 flex-1" name="devices" id="list-added">
             </select>
 
-            <button class="items-center w-1/6 max-w-sm" formaction="#">+</button>
-        </div>
-
-        <div class="max-w-4xl">
             <button class="inline-block button" type="submit" id="submitTimeFrame">Go</button>
         </div>
     </form>
 
     <?php if(isset($table)) :?>
     <?php //var_dump($table) ?>
-    <table id="table" class="cell-border stripe order-column table-fixed">
-        <?php //print_r($table)?>
-        <thead>
-            <tr id="header-row-top">
-                <?php foreach ($table[0] as $key => $column) { ?>
-                    <?php if(preg_match('/download|id|upload/', $key)) {continue;}?>
-                    <th <?php
-                    if(preg_match("/name|date/", $key, $matches)){
-                        echo "name='$matches[0]' ";
-                    }
-                    if(preg_match("/name/", $key, $matches)){
-                        echo "class='w-1/6' colspan='2'";
-                    } else if(preg_match("/date/", $key, $matches)){
-                        echo "class='w-1/6' rowspan='2'";
-                    }; ?>>
-                    <?php if(preg_match('/date/', $key)): echo ucfirst($key); else :echo ucfirst($column); endif; ?></th>
-                <?php } ?>
-            </tr>
-            <tr id="header-row-bottom">
-                <?php foreach (array_keys($table[0]) as $column) { ?>
-                    <?php if(preg_match('/(date|name|id)/', $column)) : continue; endif; ?>
-                    <th <?php if(preg_match('/date/', $column)){echo "rowspan='2'";}; if(preg_match("/(date|name|download|id|upload)/", $column, $matches)): echo "name='$matches[0]' class='w-1/6 dt-center'";endif; ?>><?php echo ucfirst($matches[0]); ?></th>
-                <?php } ?>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($table as $row) { ?>
-                <tr>
-                    <?php foreach (array_keys($row) as $column) { ?>
-                        <?php if(preg_match('/(name|id)/', $column)) : continue; endif; ?>
-                        <td <?php if(preg_match('/id/', $column)){echo "class='hidden'";}; if(!preg_match('/date/', $column)){echo "name='$column' class='dt-center'"; }?> ><?php echo $row[$column]; ?></td>
+    <hr class="mt-6">
+    <div class="w-full overflow-x-auto mt-6">
+        <table id="table" class="cell-border stripe order-column table-fixed">
+            <?php //print_r($table)?>
+            <thead>
+                <tr id="header-row-top">
+                    <?php foreach ($table[0] as $key => $column) { ?>
+                        <?php if(preg_match('/download|id|upload/', $key)) {continue;}?>
+                        <th <?php
+                        if(preg_match("/name|date/", $key, $matches)){
+                            echo "name='$matches[0]' ";
+                        }
+                        if(preg_match("/name/", $key, $matches)){
+                            echo "class='w-1/6' colspan='2'";
+                        } else if(preg_match("/date/", $key, $matches)){
+                            echo "class='w-1/6' rowspan='2'";
+                        }; ?>>
+                        <?php if(preg_match('/date/', $key)): echo ucfirst($key); else :echo ucfirst($column); endif; ?></th>
                     <?php } ?>
                 </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+                <tr id="header-row-bottom">
+                    <?php foreach (array_keys($table[0]) as $column) { ?>
+                        <?php if(preg_match('/(date|name|id)/', $column)) : continue; endif; ?>
+                        <th <?php if(preg_match('/date/', $column)){echo "rowspan='2'";}; if(preg_match("/(date|name|download|id|upload)/", $column, $matches)): echo "name='$matches[0]' class='w-1/6 dt-center'";endif; ?>><?php echo ucfirst($matches[0]); ?></th>
+                    <?php } ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($table as $row) { ?>
+                    <tr>
+                        <?php foreach (array_keys($row) as $column) { ?>
+                            <?php if(preg_match('/(name|id)/', $column)) : continue; endif; ?>
+                            <td <?php if(preg_match('/id/', $column)){echo "class='hidden'";}; if(!preg_match('/date/', $column)){echo "name='$column' class='dt-center'"; }?> ><?php echo $row[$column]; ?></td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
     <?php endif; ?>
 </div>
 <link rel="stylesheet" href="{{base-url}}/vendor/DataTables/datatables.min.css"><script src="{{base-url}}/vendor/DataTables/datatables.min.js"></script>
