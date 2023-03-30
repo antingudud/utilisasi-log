@@ -97,8 +97,8 @@ class SpreadsheetController
         $repo = new Repo($adapter); $repo->setMapper(); $repo->setDeviceRepo();
         $repoUsr = new UserRepo($adapter); $service = new Log($repo, $repoUsr);
         $status["status"] = [];
-        $status["action"] = "input";
-        $status["message"] = "request done";
+        $status["action"] = "recording data";
+        $status["message"] = "Data successfully recorded.";
 
         if(isset($data['date']) && count($data) >= 3)
         {
@@ -140,7 +140,11 @@ class SpreadsheetController
                     }
                     $adapter->commitTransaction();
                     $status["logging"] = "success";
-                } catch (\Throwable $th) {
+                } catch(\App\Model\Transaction\Exception\RecordExists $e)
+                {
+                    $status["logging"] = "failed";
+                    $adapter->rollbackTransaction();
+                } catch (\Exception $th) {
                     $status["logging"] = "failed";
                     $adapter->rollbackTransaction();
                 }
@@ -177,13 +181,16 @@ class SpreadsheetController
                 } else if( ( $status["logging"] == "failed" || $status["logging"] === FALSE ) && ( $status["updating"] == "failed" || $status["updating"] === FALSE ) )
                 {
                     $status["status"] = "failed";
+                    $status["message"] = "Failed to save data.";
                 } else if( ( $status["logging"] == "failed" || $status["logging"] === FALSE ) || ( $status["updating"] == "failed" || $status["updating"] === FALSE ) )
                 {
                     $status["status"] = "failed";
+                    $status["message"] = "Failed to save data.";
                 }  else
                 {
                     $status["status"] = "failed";
                     $status["action"] = "not run";
+                    $status["message"] = "Failed to save data.";
                 }
             } else if( isset($status["updating"]) )
             {
@@ -194,6 +201,7 @@ class SpreadsheetController
                 } else
                 {
                     $status["status"] = "failed";
+                    $status["message"] = "Failed to save data.";
                 }
             } else if( isset($status["logging"]) )
             {
@@ -204,6 +212,7 @@ class SpreadsheetController
                 } else
                 {
                     $status["status"] = "failed";
+                    $status["message"] = "Failed to save data.";
                 }
             } else {
                 $status["status"] = "failed";

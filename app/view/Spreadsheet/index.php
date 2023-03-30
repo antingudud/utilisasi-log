@@ -89,6 +89,7 @@ if(isset($this->params['data'])){
 <script type="text/javascript" src="{{base-url}}/node_modules/@selectize/selectize/dist/js/selectize.js"></script>
 <link rel="stylesheet" type="text/css" href="{{base-url}}/node_modules/@selectize/selectize/dist/css/selectize.css" />
 <script type="module">
+    import { popup } from "{{base-url}}/javascript/notification.js";
     $( function () {let select = $(function() {
         $('#list-added').selectize({
             plugins: ["restore_on_backspace", "clear_button"],
@@ -114,8 +115,7 @@ if(isset($this->params['data'])){
                     },
                     error: function(xhr,status,response)
                     {
-                        console.error("error");
-                        alert('error at grubbing');
+                        console.error("error");;
                     }
                 })
             }
@@ -163,11 +163,12 @@ if(isset($this->params['data'])){
                 },
                 onSuccess: function (data, textStatus, jqXHR)
                 {
-                    console.log({data,textStatus,jqXHR});
+                    // console.log({data,textStatus,jqXHR});
+                    let pop = popup("{{base-url}}", data);
                 },
                 onFail: function(jqXHR, textStatus, errorThrown)
                 {
-                    
+                    let pop = popup("{{base-url}}", JSON.parse(jqXHR.responseText));
                 },
                 onDraw: function()
                 {
@@ -200,7 +201,7 @@ if(isset($this->params['data'])){
             },
             error: function (xhr, status, resp)
             {
-                console.error(xhr + ' ' + status + ' ' + ' ' + resp)
+                // console.error(xhr + ' ' + status + ' ' + ' ' + resp)
             }
         });
     });
