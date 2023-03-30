@@ -3,7 +3,8 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
-  content: ['./app/view/**/*.php'],
+  mode: 'jit',
+  content: ['./app/view/**/*.{php,html,js}', './javascript/*.js'],
   theme: {
     extend: {},
   },
