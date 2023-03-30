@@ -87,6 +87,10 @@ $router->get('/device', function () {
     $Device = new DeviceController();
     echo $Device->detail($_GET);
 });
+$router->post('/get-devices', function () {
+    $Device = new DeviceController();
+    echo $Device->getAll();
+});
 $router->post('device/remove', function () {
     $Device = new DeviceController();
     echo $Device->remove($_POST);

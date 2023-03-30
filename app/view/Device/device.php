@@ -52,9 +52,7 @@ if(isset($this->params['data']))
         const initialName = $("#device-name").val();
         const initialCategory = $("#category").val();
         let formHandler = new FormHandler('device-edit', '{{base-url}}/device/edit', function(response) {
-            // window.location.replace("{{base-url}}/devices");
             let pop = popup("{{base-url}}", response);
-            // console.log(response)
         })
         $("#reset").on('click', function(e) {
             e.preventDefault();
@@ -75,11 +73,15 @@ if(isset($this->params['data']))
                 $.ajax({
                     type: 'POST',
                     url: "{{base-url}}/device/remove",
-                    dataType: "json",
+                    // dataType: "json",
                     data: JSON.stringify({data: {name: name, id: id}}),
                     success: function(response, status, jqXHR)
                     {
-                        console.log(response)
+                        window.location.replace("{{base-url}}/devices");
+                    },
+                    error: function(jqXHR, textStatus, errorThrown)
+                    {
+                        let pop = popup("{{base-url}}", JSON.parse(jqXHR.responseText));
                     }
                 })
             }

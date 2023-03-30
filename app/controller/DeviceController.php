@@ -19,11 +19,20 @@ class DeviceController
         return $view->render();
     }
 
+    public function getAll()
+    {
+        $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
+        $devices = $repo->fetchAll();
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($devices);
+        die();
+    }
+
     public function edit(Array $POST)
     {
         $status = [
             "status" => "",
-            "action" => "edit",
+            "action" => "updating",
             "message" => ""
         ];
         $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
@@ -36,11 +45,11 @@ class DeviceController
         {
             $repo->update($data['name'], $data['id'], $data['category']);
             $status["status"] = "success";
-            $status["message"] = "Edit success.";
+            $status["message"] = "Edit successful.";
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($status);
             die();
-        } catch (\Exception $e)
+        } catch (\Throwable $e)
         {
             $status["status"] = "failed";
             $status["message"] = "Edit failed.";
@@ -52,13 +61,35 @@ class DeviceController
 
     public function add(Array $POST)
     {
+        $status = [
+            "status" => "",
+            "action" => "creating",
+            "message" => ""
+        ];
+
         $adapter = new MysqliAdapter(new ConnectDB); $repo = new DeviceRepo($adapter);
         if(!isset($POST['data']))
         {
             return;
         }
         $data = $POST['data'];
-        return $repo->createNew($data['name'], $data['category']);
+        try
+        {
+            $repo->createNew($data['name'], $data['category']);
+            $status["status"] = "success";
+            $status["message"] = "Added new device successfully.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        }
+        catch ( \App\Model\Transaction\Exception\RecordExists $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Cannot add, device already exists.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        }
     }
 
     public function remove(Array $POST)
@@ -68,7 +99,18 @@ class DeviceController
         $data = json_decode(file_get_contents('php://input'), true);
         $data = $data['data'];
 
-        return $repo->remove($data['id']);
+        try
+        {
+            $repo->remove($data['id']);
+        } catch(\Exception $e)
+        {
+            $status["status"] = "failed";
+            $status["action"] = "deletion";
+            $status["message"] = "Unknown error.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        }
     }
 
     /**

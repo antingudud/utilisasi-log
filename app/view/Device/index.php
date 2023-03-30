@@ -27,10 +27,10 @@ if(isset($this->params['data']))
     <hr class="mt-12">
 
     <div class="border-2 border-gray-200 rounded-2xl border-solid flex mt-12">
-        <div class="grid w-full grid-cols-2">
+        <div class="grid w-full grid-cols-2" id="device-container">
             <?php if(isset($devices)) :?>
                 <?php foreach($devices as $key => $value): ?>
-                    <section class="" id="device-list">
+                    <section class="device-list">
                         <ul>
                             <?php foreach($value as $k => $device): ?>
                             <li <?php echo "name='" . $device['idDevice'] . "'" ?> >
@@ -47,9 +47,71 @@ if(isset($this->params['data']))
 
 <script type="module">
     import { FormHandler } from "{{base-url}}/javascript/FormHandler.js";
-    $(document).ready(function () {
-        let handleform = new FormHandler("device-new", "{{base-url}}/devices/new", function() {
+    import { popup } from "{{base-url}}/javascript/notification.js";
 
+    $(document).ready(function () {
+        let handleform = new FormHandler("device-new", "{{base-url}}/devices/new", function(response) {
+            let pop = popup("{{base-url}}", response, function ()
+            {
+                $.ajax({
+                    method: 'POST',
+                    dataType: 'json',
+                    url: "{{base-url}}/get-devices",
+                    success: function(response) {
+                        let deviceList = $("#device-container");
+                        let fail = $(".device-list");
+                        let devices = response;
+
+                        fail.remove();
+                        
+                        $.each(devices, function(key, value) {
+                            var deviceSection = $('<section>').addClass('device-list');
+                            var deviceUl = $('<ul>');
+                            $.each(value, function(k, device) {
+                                var deviceLi = $('<li>').attr('name', device.idDevice);
+                                var deviceLink = $('<a>').addClass('text-sky-600 hover:underline')
+                                    .attr('href', '{{base-url}}/device?device=' + device.idDevice)
+                                    .text(device.nameDevice);
+                                deviceLi.append(deviceLink);
+                                deviceUl.append(deviceLi);
+                            });
+                            deviceSection.append(deviceUl);
+                            deviceList.append(deviceSection);
+                        });
+                    }
+                })
+            });
+        }, function (response) {
+            let popErs = popup("{{base-url}}", response, function ()
+            {
+                $.ajax({
+                    method: 'POST',
+                    dataType: 'json',
+                    url: "{{base-url}}/get-devices",
+                    success: function(response) {
+                        let deviceList = $("#device-container");
+                        let fail = $(".device-list");
+                        let devices = response;
+
+                        fail.remove();
+                        
+                        $.each(devices, function(key, value) {
+                            var deviceSection = $('<section>').addClass('device-list');
+                            var deviceUl = $('<ul>');
+                            $.each(value, function(k, device) {
+                                var deviceLi = $('<li>').attr('name', device.idDevice);
+                                var deviceLink = $('<a>').addClass('text-sky-600 hover:underline')
+                                    .attr('href', '{{base-url}}/device?device=' + device.idDevice)
+                                    .text(device.nameDevice);
+                                deviceLi.append(deviceLink);
+                                deviceUl.append(deviceLi);
+                            });
+                            deviceSection.append(deviceUl);
+                            deviceList.append(deviceSection);
+                        });
+                    }
+                })
+            });    
         });
     })
 </script>

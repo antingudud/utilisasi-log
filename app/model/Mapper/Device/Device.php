@@ -59,7 +59,7 @@ class DeviceMapper implements DvcInterface
      */
     public function remove(Device $device)
     {
-        $this->db->delete('device', ['idDevice' => $device->getIdDevice()]);
+        return $this->db->delete('device', ['idDevice' => $device->getIdDevice()]);
     }
 
     /**

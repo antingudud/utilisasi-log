@@ -3,11 +3,12 @@ export class FormHandler
     form;
     actionUrl;
 
-    constructor(formId, actionUrl, successCallback)
+    constructor(formId, actionUrl, successCallback, errorCallback)
     {
         this.form = document.getElementById(formId);
         this.actionUrl = actionUrl;
         this.successCallback = successCallback;
+        this.errorCallback = errorCallback;
         this.form.addEventListener('submit', this.handleForm.bind(this));
     }
 
@@ -40,6 +41,12 @@ export class FormHandler
             }.bind(this),
             error: function(xhr, status, response)
             {
+                if(this.errorCallback)
+                {
+                    // console.log("awikwiw");
+                    let errMsg = JSON.parse(xhr.responseText);
+                    this.errorCallback(errMsg);
+                }
             }.bind(this)
         })
     }
