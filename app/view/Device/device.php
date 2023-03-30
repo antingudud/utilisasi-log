@@ -52,8 +52,9 @@ if(isset($this->params['data']))
         const initialName = $("#device-name").val();
         const initialCategory = $("#category").val();
         let formHandler = new FormHandler('device-edit', '{{base-url}}/device/edit', function(response) {
-            let pop = popup("{{base-url}}", response);
-        })
+            let pop = popup("{{base-url}}", response);}, function(response) {
+                let pop = popup("{{base-url}}", response)
+            })
         $("#reset").on('click', function(e) {
             e.preventDefault();
             $("#device-name").val(initialName);

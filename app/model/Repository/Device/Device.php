@@ -5,6 +5,10 @@ use App\Core\ConnectDB;
 use App\Core\Database\AdapterInterface;
 use App\Model\Device;
 use App\Model\Mapper\Device\DeviceMapper;
+use App\Model\Transaction\Exception\DeviceInexistent;
+use App\Model\Transaction\Exception\InvalidCategory;
+use App\Model\Transaction\Exception\InvalidID;
+use App\Model\Transaction\Exception\InvalidName;
 
 class DeviceRepo
 {
@@ -99,6 +103,15 @@ class DeviceRepo
     public function update(String $name, String $id, String $category)
     {
         $db = $this->db;
+        $id = $this->validateId($id);
+        $name = $this->validateName($name);
+        $category = $this->validateCategory($category);
+
+        if(!$this->isExist($id))
+        {
+            throw new DeviceInexistent();
+        }
+
         $q = "SELECT idCategory from category WHERE nameCategory = ? ORDER BY idCategory";
         $st = $db->prepare($q);
         $st->bind_param('s', $category);
@@ -121,6 +134,9 @@ class DeviceRepo
         $db = $this->db;
         $mapper = $this->mapper;
         $id = substr(uniqid(), 6, 7);
+        $category = $this->validateCategory($category);
+        $name = $this->validateName($name);
+
         $q = "SELECT idCategory from category WHERE nameCategory = ? ORDER BY idCategory";
         $st = $db->prepare($q);
         $st->bind_param('s', $category);
@@ -144,6 +160,13 @@ class DeviceRepo
     {
         $db = $this->db;
         $mapper = $this->mapper;
+        $id = $this->validateId($id);
+        
+        if(!$this->isExist($id))
+        {
+            throw new DeviceInexistent();
+        }
+
         $query = "SELECT * FROM device WHERE idDevice = ?";
         $stmt = $db->prepare($query);
         $stmt->bind_param("s", $id);
@@ -153,5 +176,101 @@ class DeviceRepo
         $Device = $mapper->createDevice($arr);
         
         return $mapper->remove($Device);
+    }
+
+    /**
+     * Validate and sanitize device id.
+     * [^a-zA-Z0-9]
+     * 
+     * @param string $id Device's id
+     * @return string|InvalidID return
+     */
+    protected function validateId(String $id)
+    {
+        $err = [];
+
+        $id = preg_replace('/[^a-zA-Z0-9]/', '', $id);
+
+        if(strlen($id) > 8 || strlen($id) < 7)
+        {
+            $err["error"] = "ID too long or too short.";
+        }
+        if(isset($err["error"]))
+        {
+            throw new InvalidID();
+        }
+        return $id;
+    }
+
+    /**
+     * Validate and sanitize device name.
+     * [^a-zA-Z0-9]
+     * 
+     * @param string $name Device's name
+     * @return string|InvalidName return
+     */
+    protected function validateName(String $name)
+    {
+        $err = [];
+
+        $name = preg_replace('/[^A-Za-z0-9@,.#\-_() ]/', '', $name);
+
+        if(strlen($name) > 50)
+        {
+            $name = substr($name, 0, 50);
+        }
+        if(strlen($name) < 1)
+        {
+            $err["error"] = "Name cannot be empty.";
+        }
+        if(isset($err["error"]))
+        {
+            throw new InvalidName();
+        }
+        return $name;
+    }
+    
+    /**
+     * Validate category (name,eg. 'LAN', 'WAN')
+     * 
+     * @param string $category
+     * @return string|InvalidCategory $category
+     */
+    protected function validateCategory(String $category)
+    {
+        $err = [];
+
+        $category = strtoupper($category);
+        $category = preg_replace('/[^A-Z]/', '', $category);
+
+        if(strlen($category) > 3 || strlen($category) < 3)
+        {
+            $err["error"] = "Category too short or too long.";
+        }
+        if($category !== "LAN" && $category !== "WAN")
+        {
+            $err["error"] = "Invalid category.";
+        }
+        if(isset($err["error"]))
+        {
+            throw new InvalidCategory();
+        }
+        return $category;
+    }
+
+    /**
+     * Check if the id have any existing device in the database.
+     * 
+     * @param string $id Device's id
+     * @return bool
+     */
+    protected function isExist(String $id)
+    {
+        $db = $this->db;
+        $query = "SELECT COUNT(*) FROM device WHERE idDevice = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_row()[0]? true: false;
     }
 }

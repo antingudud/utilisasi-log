@@ -4,6 +4,10 @@ namespace App\Controller;
 use App\Core\ConnectDB;
 use App\Core\Database\MysqliAdapter;
 use App\Model\Repository\Device\DeviceRepo;
+use App\Model\Transaction\Exception\DeviceInexistent;
+use App\Model\Transaction\Exception\InvalidCategory;
+use App\Model\Transaction\Exception\InvalidID;
+use App\Model\Transaction\Exception\InvalidName;
 use App\View\View;
 
 class DeviceController
@@ -49,10 +53,39 @@ class DeviceController
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($status);
             die();
-        } catch (\Throwable $e)
+        } catch (DeviceInexistent $e)
         {
             $status["status"] = "failed";
-            $status["message"] = "Edit failed.";
+            $status["message"] = "Device not found, try refreshing the page.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (InvalidID $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Edit failed, try refreshing the page.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (InvalidName $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Invalid name.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (InvalidCategory $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Category not found.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (\Exception $e)
+        {
+            $status["status"] = "failed";
+            $status["action"] = "updating";
+            $status["message"] = "Unknown error.";
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($status);
             die();
@@ -99,9 +132,39 @@ class DeviceController
         $data = json_decode(file_get_contents('php://input'), true);
         $data = $data['data'];
 
+        $status["action"] = "deletion";
+
         try
         {
             $repo->remove($data['id']);
+        }catch (DeviceInexistent $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Device not found, try refreshing the page.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (InvalidID $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Failed to remove, try refreshing the page.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (InvalidName $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Invalid name.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (InvalidCategory $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Category not found.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
         } catch(\Exception $e)
         {
             $status["status"] = "failed";
@@ -110,7 +173,7 @@ class DeviceController
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($status);
             die();
-        }
+        } 
     }
 
     /**

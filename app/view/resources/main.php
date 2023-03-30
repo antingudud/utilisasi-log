@@ -18,10 +18,7 @@
         <div class="flex justify-between w-full mr-16 ml-16">
             <ul class="flex list-none m-0">
                 <li class="mr-6">
-                    <a class="text-white hover:text-red-300" href="{{base-url}}/">Home</a>
-                </li>
-                <li class="mr-6">
-                    <a class="text-white hover:text-red-300" href="{{base-url}}/spreadsheet">Spreadsheet</a>
+                    <a class="text-white hover:text-red-300" href="{{base-url}}/spreadsheet">Home</a>
                 </li>
                 <li class="mr-6">
                     <a class="text-white hover:text-red-300" href="{{base-url}}/view/report">Graph</a>

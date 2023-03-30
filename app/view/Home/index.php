@@ -9,12 +9,15 @@
 </head>
 
 <body>
-    <h1>This is home</h1>
+    <!-- <h1>This is home</h1>
     <a href="view">
         <button>
             <p>device and category</p>
         </button>
-    </a>
+    </a> -->
 </body>
 
 </html>
+<script>
+    window.location.replace("{{base-url}}/spreadsheet");
+</script>
