@@ -19,6 +19,7 @@ $router->get('/', function() {
     $Home = new \App\Controller\Home();
     echo $Home->index();
 });
+
 $router->post('view/table', function() {
     $controller = new SpreadsheetController();
     echo $controller->populateTable($_POST['data']);
@@ -27,6 +28,7 @@ $router->post('view/spreadsheet', function () {
     $controller = new SpreadsheetController();
     echo $controller->makeTable($_POST);
 });
+
 $router->get('/devices', function () {
     $Device = new DeviceController();
     echo $Device->index();
@@ -65,10 +67,12 @@ $router->mount('/spreadsheet', function() use ($router){
         return $spreadsheet->edit($_POST);
     });
 });
+
 $router->mount('/options', function() use($router) {
     $router->post('/devices', function() {
         return (new OptionsContr)->getDevices();
     });
+
 });
 $router->get('view/report', function() {
     $Home = new \App\Controller\Home();
