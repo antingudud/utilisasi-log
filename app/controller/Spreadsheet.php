@@ -9,6 +9,8 @@ use App\Model\Repository\Device\DeviceRepo;
 use App\Model\Repository\User\Repo as UserRepo;
 use DateTime;
 use App\Model\Service\Log\Log;
+use App\Model\Transaction\Exception\InvalidDate;
+use App\Model\Transaction\Exception\InvalidValue;
 use App\Model\Transaction\Exception\RecordExists;
 
 class SpreadsheetController
@@ -102,6 +104,15 @@ class SpreadsheetController
 
         if(isset($data['date']) && count($data) >= 3)
         {
+            try
+            {
+                $this->validateDate($data["date"]);
+            } catch (InvalidDate $e)
+            {
+                $status["status"] = "failed";
+                $status["message"] = "Invalid date.";
+                return $this->notif($status["status"], $status["action"], $status["message"]);
+            }
             $date = (DateTime::createFromFormat('D, j M Y', $data['date']))->format('Y-m-d');
             $ids = [];
             foreach($data as $key => $value)
@@ -114,7 +125,7 @@ class SpreadsheetController
                     $ids[$id]['date'] = $date;
                 }
             }
-            // solution
+
             $attendanceList = [];
             foreach($ids as $key => $value)
             {
@@ -130,6 +141,7 @@ class SpreadsheetController
                 $attendanceList["new"][$key]['upload'] = $value['upload'];
             }
 
+            // TODO separate this from the controller. It looks ugly 
             if(isset($attendanceList['new']))
             {
                 $adapter->beginTransaction();
@@ -161,10 +173,15 @@ class SpreadsheetController
                         "dateTime" => $details["date"]
                     );
                 }
-                if($repo->update($updateList))
+                try
                 {
+                    $repo->update($updateList);
                     $status["updating"] = "success";
-                } else
+                } catch(InvalidValue $e)
+                {
+                    $status["updating"] = "failed";
+                    $status["message"] = "Invalid values.";
+                } catch(\Exception $e)
                 {
                     $status["updating"] = "failed";
                 }
@@ -336,7 +353,26 @@ class SpreadsheetController
     }
 
     /**
-     * Return to request
+     * Validate date. The required format is for example "Wed, 1 Mar 2023"
+     * 
+     * @param string $date Date to be validated
+     * @return string|InvalidDate $date if successful. InvalidDate if false
+     */
+    protected function validateDate(String $date)
+    {    
+        $dateFormat = 'D, j M Y';
+        $dateTime = DateTime::createFromFormat($dateFormat, $date);
+        if($dateTime && $dateTime->format($dateFormat) == $date)
+        {
+            return $date;
+        } else
+        {
+            throw new InvalidDate('D, j M Y');
+        }
+    }
+
+    /**
+     * Send response to notification handler
      * 
      * @param string $status success|failed|error|exception
      * @param string $action input|validation|whatever

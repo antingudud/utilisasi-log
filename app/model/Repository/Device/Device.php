@@ -9,6 +9,7 @@ use App\Model\Transaction\Exception\DeviceInexistent;
 use App\Model\Transaction\Exception\InvalidCategory;
 use App\Model\Transaction\Exception\InvalidID;
 use App\Model\Transaction\Exception\InvalidName;
+use App\Model\Transaction\Exception\RecordExists;
 
 class DeviceRepo
 {
@@ -110,6 +111,10 @@ class DeviceRepo
         if(!$this->isExist($id))
         {
             throw new DeviceInexistent();
+        }
+        if($this->isExistInSameCategory($name, $category))
+        {
+            throw new RecordExists();
         }
 
         $q = "SELECT idCategory from category WHERE nameCategory = ? ORDER BY idCategory";
@@ -272,5 +277,30 @@ class DeviceRepo
         $stmt->bind_param("s", $id);
         $stmt->execute();
         return $stmt->get_result()->fetch_row()[0]? true: false;
+    }
+
+    /**
+     * Check if a name already exists within a category
+     * 
+     * @param string $name Device's name
+     * @param string $category Category's id or name
+     * @return bool true|false
+     */
+    protected function isExistInSameCategory(String $name, String $category)
+    {
+        $db = $this->db;
+        if($category === "WAN" || $category === "LAN")
+        {
+            $query = "SELECT idCategory FROM category WHERE nameCategory = ?";
+            $stmt = $db->prepare($query);
+            $stmt->bind_param("s", $category);
+            $stmt->execute();
+            $category = $stmt->get_result()->fetch_row()[0];
+        }
+        $query = "SELECT COUNT(*) FROM device WHERE (nameDevice = ? AND idCategory = ?)";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ss", $name, $category);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_row()[0]? true : false;
     }
 }

@@ -31,6 +31,7 @@ if(isset($this->params['data']))
             <?php if(isset($devices)) :?>
                 <?php foreach($devices as $key => $value): ?>
                     <section class="device-list">
+                        <h4 class="pl-10 font-bold"><?php echo $key ?></h4>
                         <ul>
                             <?php foreach($value as $k => $device): ?>
                             <li <?php echo "name='" . $device['idDevice'] . "'" ?> >

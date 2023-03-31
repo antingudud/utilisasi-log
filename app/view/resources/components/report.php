@@ -6,7 +6,7 @@ $semestres = $this->params['semester'] ?>
         <a href="{{base-url}}/spreadsheet"><button type="">Return</button></a>
     </section>
 
-    <section>
+    <section class="max-w-2xl w-full">
         <form action="" id="utilForm">
             <ul>
                 <li>
@@ -26,12 +26,11 @@ $semestres = $this->params['semester'] ?>
                     <label for="bulan">Bulan</label>
                     <input required type="radio" name="period" id="bulan" value="bulan">
                     <select class="timeframe" id="month" style="display: none;">
-                        <option hidden disabled selected value>Bulan</option>
+                        <!-- <option hidden disabled selected value>Bulan</option> -->
                         <?php
-                        $iteration = 0;
-                        foreach ($monthList as $month) {
-                            $iteration++;
-                            echo "<option value='${iteration}'>$month</option>";
+                        for ($m = 1; $m<=12; $m++) {
+                            $month = date('F', mktime(0,0,0,$m, 1, date('Y')));
+                            echo "<option value='$m'>$month</option>";
                         }
                         ?>
                     </select><br>
@@ -50,12 +49,12 @@ $semestres = $this->params['semester'] ?>
                     </select>
                 <li>
                     <select name="year" id="year">
-                        <option selected value="<?php echo (int)date("Y") ?>"><?php echo (int)date("Y") ?></option>
                         <?php
-                        $years = 2010;
-                        while ($years <= (int)date("Y")) {
-                            echo "<option value='${years}'>$years</option>";
-                            $years++;
+                        $year = (int)date("Y");
+                        $yearLimit = 2010;
+                        while ($year != $yearLimit) {
+                            echo "<option value='${year}'>$year</option>";
+                            $year--;
                         }
                         ?>
                     </select>
@@ -67,7 +66,7 @@ $semestres = $this->params['semester'] ?>
         </form>
     </section>
 
-    <section class="flex flex-col items-center justify-center container col" id="">
+    <section class="flex flex-col items-center justify-center w-full container col" id="">
         <div class="self-start justify-self-start">
             <h3>Chart</h3>
         </div>
@@ -85,6 +84,20 @@ $semestres = $this->params['semester'] ?>
 
 <script>
     $(document).ready(function() {
+        // Select current month in option
+        let monthSelect = document.getElementById('month');
+        let monthOptions = monthSelect.options;
+        let currentMonth = new Date().getMonth() + 1;
+        
+        for(let i = 0; i < monthOptions.length; i++)
+        {
+            if(monthOptions[i].value == currentMonth)
+            {
+                monthSelect.selectedIndex = i;
+                break;
+            }
+        }
+        
         $('input:radio[name=category]').change(function() {
             var value = this.value
             $.ajax({

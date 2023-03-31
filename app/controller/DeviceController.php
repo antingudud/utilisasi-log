@@ -8,6 +8,7 @@ use App\Model\Transaction\Exception\DeviceInexistent;
 use App\Model\Transaction\Exception\InvalidCategory;
 use App\Model\Transaction\Exception\InvalidID;
 use App\Model\Transaction\Exception\InvalidName;
+use App\Model\Transaction\Exception\RecordExists;
 use App\View\View;
 
 class DeviceController
@@ -81,6 +82,14 @@ class DeviceController
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($status);
             die();
+        } catch (RecordExists $e)
+        {
+            $status["status"] = "failed";
+            $status["action"] = "updating";
+            $status["message"] = "Device already exists.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
         } catch (\Exception $e)
         {
             $status["status"] = "failed";
@@ -114,11 +123,31 @@ class DeviceController
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($status);
             die();
-        }
-        catch ( \App\Model\Transaction\Exception\RecordExists $e)
+        } catch ( RecordExists $e)
         {
             $status["status"] = "failed";
             $status["message"] = "Cannot add, device already exists.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (InvalidName $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Invalid name.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (InvalidCategory $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Category not found.";
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($status);
+            die();
+        } catch (\Exception $e)
+        {
+            $status["status"] = "failed";
+            $status["message"] = "Unknown error.";
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($status);
             die();
