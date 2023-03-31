@@ -1,9 +1,9 @@
 <?php $data = $this->params['content'];
 $monthList = $this->params['month'];
 $semestres = $this->params['semester'] ?>
-<div>
+<div class="flex flex-col w-full">
     <section>
-        <a href="../view"><button type="">Return</button></a>
+        <a href="{{base-url}}/spreadsheet"><button type="">Return</button></a>
     </section>
 
     <section>
@@ -67,8 +67,8 @@ $semestres = $this->params['semester'] ?>
         </form>
     </section>
 
-    <section class="container col" id="">
-        <div class="">
+    <section class="flex flex-col items-center justify-center container col" id="">
+        <div class="self-start justify-self-start">
             <h3>Chart</h3>
         </div>
 
@@ -89,7 +89,7 @@ $semestres = $this->params['semester'] ?>
             var value = this.value
             $.ajax({
                 type: 'POST',
-                url: '/utilisasi-log/options/devices',
+                url: '{{base-url}}/options/devices',
                 data: {
                     category: value
                 },
@@ -126,7 +126,7 @@ $semestres = $this->params['semester'] ?>
 
             $("#chart").attr(
                 "src",
-                `/utilisasi-log/app/view/Transaction/sus.php?idDevice=${$('#device').val()}&selectedTime=${$('.timeframe:visible').val()}&range=${$('input[type=radio][name=period]:checked').val()}&year=${$('#year').val()}`
+                `{{base-url}}/app/view/Transaction/sus.php?idDevice=${$('#device').val()}&selectedTime=${$('.timeframe:visible').val()}&range=${$('input[type=radio][name=period]:checked').val()}&year=${$('#year').val()}`
             )
         })
     })

@@ -5,3 +5,15 @@ public/TODO
 bfg-1.14.0.jar
 public/texto.txt
 public/TODO
+app/controller/test.php
+.gitignore
+app/view/Transaction/test.php
+php.ini
+tailwind.config.js
+public/uploaded
+composer.json
+composer.lock
+.gitignore
+.prettierrc
+composer.lock
+app/view/test.php

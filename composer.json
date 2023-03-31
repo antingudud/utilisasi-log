@@ -1,13 +1,24 @@
 {
     "require": {
         "bramus/router": "~1.6",
-        "josantonius/session": "^1.1"
+        "josantonius/session": "^1.1",
+        "phpoffice/phpspreadsheet": "^1.23",
+        "components/jquery": "^3.6.0"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
     },
     "autoload": {
-        "classmap": ["classes", "app/core", "app/model", "app/controller", "app/view", "vendor/bramus/router/src/Bramus"],
+        "classmap": ["app/core", "app/model", "app/controller", "app/view", "vendor/bramus/router/src/Bramus", "vendor/phpunit/phpunit/src"],
         "psr-4": {
-            "Josantonius\\":"vendor/josantonius"
+            "Josantonius\\":"vendor/josantonius",
+            "Aulia\\ImageUpload\\":"vendor/Aulia/ImageUpload/src"
         },
         "files": ["vendor/jpgraph/jpgraph.php", "vendor/jpgraph/jpgraph_bar.php"]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
     }
 }

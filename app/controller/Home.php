@@ -8,6 +8,7 @@ use App\Model\DeviceService;
 use App\Model\Device;
 use App\Model\Mapper\Transaction\Mapper;
 use App\Model\Repository\Transaction\Repo;
+use App\Model\Service\Delete\Delete;
 use App\Model\Service\SheetPerMonth\SheetPerMonth;
 use App\Model\TransacService;
 
@@ -19,15 +20,29 @@ class Home {
         $body = (new Device)->getTransaction();
         $params = [
             'content' => [], 
-            'header' => ['Tanggal', 'Device', 'Interface', 'Download', 'Upload', 'Author', 'Tanggal dibuat', 'Tanggal diubah', '<button type="submit" id="buttonViewUpdate">Update</button><button class="button error" type="submit" id="buttonViewDelete">Delete</button>'] , 
+            'header' => ['Tanggal', 'Device', 'Interface', 'Download', 'Upload', 'Author', 'Tanggal dibuat', 'Tanggal diubah', '<button type="submit" class="button bg-green-300" id="buttonViewUpdate">Update</button><button class="button error" type="submit" id="buttonViewDelete">Delete</button>'] , 
             'body' => $body
         ];
         $View = (new View('resources/components/table', $params));
         return $View->render();
     }
+    public function delete($data)
+    {
+        $repo = new Repo(new MysqliAdapter(new ConnectDB()));
+        $repo->setMapper();
+        $repo->setDeviceRepo();
+        $service = new Delete($repo);
+        $id = $data['id'];
+        return $service->delete($id);
+    }
     public function new()
     {
         $View = (new View('resources/components/new'));
+        return $View->render();
+    }
+    public function newDevice()
+    {
+        $View = (new View('resources/components/newdevice'));
         return $View->render();
     }
     public function update(Array $id)

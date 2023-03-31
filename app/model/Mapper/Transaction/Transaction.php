@@ -38,6 +38,10 @@ class Mapper
         return $this;
     }
 
+    /**
+     * @param array $filter WHERE clause
+     * @param bool $one Map one transaction or not
+     */
     public function find(Array $filter = [], $one = FALSE)
     {
         $rows = $this->db->select(['*'], "transaction", $filter)->fetch_all(MYSQLI_ASSOC);
@@ -51,7 +55,7 @@ class Mapper
 
     public function save(Transac $tr)
     {
-        $modified = $tr->getDateModified()?: '';
+        $modified = $tr->getDateModified()?: '0000-00-00 00:00:00';
 
         if($this->exists($tr))
         {

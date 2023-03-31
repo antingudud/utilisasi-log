@@ -29,38 +29,38 @@ $monthList = $this->params['month'];
     <button class="button" type="submit" id="submitTimeFrame">Go</button>
 </form>
 
-<form id="viewTableForm" action="" method="POST">
-    <table class="striped" id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
+<form class="flex flex-col h-screen" id="viewTableForm" action="" method="POST">
+    <table class="relative w-full border striped" id="indexViewTable" border="1px" cellpadding="10px" cellspacing="0px">
         <tr>
-            <th colspan="13" style="background: white; position: sticky; top: 0;">
-                <button class="button"><a href="/utilisasi-log/view/new">Upload data</a></button>
+            <th colspan="13" class="sticky top-0 px-6 py-3 bg-slate-300">
+                <button class="button"><a href="{{base-url}}/view/new">Upload data</a></button>
                 <button class="button">Category</button>
                 <button class="button" name="alternateTableLook" id="alternateTableLook">Alternate Look</button>
-                <button class="button" name="chartReport" id="chartReport"><a href="/utilisasi-log/view/report">Report</a></button>
+                <button class="button" name="chartReport" id="chartReport"><a href="{{base-url}}/view/report">Report</a></button>
             </th>
         </tr>
         <tr>
-            <td style="background: white; position: sticky; top: 63px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);" rowspan="2">Tanggal</td>
-            <td style="background: white; position: sticky; top: 63px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);" colspan="2">CR Indihome</td>
-            <td style="background: white; position: sticky; top: 63px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);" colspan="2">CP Indihome</td>
-            <td style="background: white; position: sticky; top: 63px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);" colspan="2">PK Biznet</td>
-            <td style="background: white; position: sticky; top: 63px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);" colspan="2">PK Indosat</td>
-            <td style="background: white; position: sticky; top: 63px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);" colspan="2">CK Orbit</td>
-            <td style="background: white; position: sticky; top: 63px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);" colspan="2">CK XL</td>
+            <td style="top: 53px;" class="sticky px-6 py-3 bg-white" rowspan="2">Tanggal</td>
+            <td style="top: 53px;" class="sticky px-6 py-3 bg-white" colspan="2">CR Indihome</td>
+            <td style="top: 53px;" class="sticky px-6 py-3 bg-white" colspan="2">CP Indihome</td>
+            <td style="top: 53px;" class="sticky px-6 py-3 bg-white" colspan="2">PK Biznet</td>
+            <td style="top: 53px;" class="sticky px-6 py-3 bg-white" colspan="2">PK Indosat</td>
+            <td style="top: 53px;" class="sticky px-6 py-3 bg-white" colspan="2">CK Orbit</td>
+            <td style="top: 53px;" class="sticky px-6 py-3 bg-white" colspan="2">CK XL</td>
         </tr>
         <tr>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Download</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Download</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Upload</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Upload</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Upload</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Download</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Upload</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Upload</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Download</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Download</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Download</th>
-            <th style="background: white; position: sticky; top: 113.5px; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);">Upload</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Download</th>
+            <th style="top: 93.6px;" class="sticky px-6 py-3 bg-white" >Upload</th>
         </tr>
         <?php $indexList = 0;
         foreach ($log as $row) : ?>
@@ -93,7 +93,7 @@ $monthList = $this->params['month'];
             
             $.ajax(
                 {
-                    url: '/utilisasi-log/options/new',
+                    url: '{{base-url}}/options/new',
                     type: 'POST',
                     data: {year: year, month: month},
                     cache: false,

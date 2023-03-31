@@ -13,18 +13,15 @@ class MysqliAdapter implements AdapterInterface
 
     public function beginTransaction()
     {
-        $this->db->begin_transaction();
-        return $this;
+        return $this->db->begin_transaction();
     }
     public function commitTransaction()
     {
-        $this->db->commit();
-        return $this;
+        return $this->db->commit();
     }
     public function rollbackTransaction()
     {
-        $this->db->rollback();
-        return $this;
+        return $this->db->rollback();
     }
 
     public function insert(string $table, array $data, string $types = "")

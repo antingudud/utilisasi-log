@@ -48,16 +48,6 @@ class SubmitContr
     {
         $this->device = $model;
     }
-
-    public function log()
-    {
-        $download = floatval($this->data['download']);
-        $upload = floatval($this->data['upload']);
-        $date = strval($this->data['date']);
-        $idDevice = strval($this->data['idDevice']);
-
-        return $this->service->log($download, $upload, $date, $idDevice);
-    }
     public function delete()
     {
         $id = $this->data['id'];
