@@ -43,8 +43,8 @@ if(isset($this->params['data'])){
 
     <?php if(isset($table)) :?>
     <?php //var_dump($table) ?>
-    <hr class="mt-6">
-    <div class="w-full overflow-x-auto mt-6">
+    <hr class="mt-12">
+    <div class="border-2 border-solid pt6 pb-6 pl-6 pr-6 border-gray-200 rounded-2xl w-full overflow-x-auto mt-12">
         <table id="table" class="cell-border stripe order-column table-fixed">
             <?php //print_r($table)?>
             <thead>
@@ -138,7 +138,7 @@ if(isset($this->params['data'])){
                 editButton: true,
                 buttons: {
                     edit: {
-                        class: 'btn btn-sm btn-default w-1/6',
+                        class: 'btn btn-sm btn-default ',
                         html: 'Edit'
                     }
                 },
@@ -163,7 +163,6 @@ if(isset($this->params['data'])){
                 },
                 onSuccess: function (data, textStatus, jqXHR)
                 {
-                    // console.log({data,textStatus,jqXHR});
                     let pop = popup("{{base-url}}", data);
                 },
                 onFail: function(jqXHR, textStatus, errorThrown)
@@ -173,7 +172,7 @@ if(isset($this->params['data'])){
                 onDraw: function()
                 {
                     $("#header-row-top th:last-child")
-                    .addClass("w-1/6")
+                    .addClass("w-1/12")
                     $("#header-row-bottom td:last-child button").remove()
                 }
             })
@@ -194,9 +193,6 @@ if(isset($this->params['data'])){
             success: function(resp)
             {
                 console.log('Success');
-                // let newDoc = document.open("text/html", "replace");
-                // newDoc.write(resp);
-                // newDoc.close();
                 $('#mainbody').html(resp);
             },
             error: function (xhr, status, resp)

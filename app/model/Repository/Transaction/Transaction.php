@@ -8,6 +8,7 @@ use App\Model\User\User;
 use App\Model\Device;
 use App\Model\Mapper\Transaction\Mapper;
 use App\Model\Repository\Device\DeviceRepo;
+use App\Model\Transaction\Exception\InvalidValue;
 
 class Repo
 {
@@ -241,6 +242,12 @@ class Repo
 
     public function update(Array $list)
     {
+        foreach($list as $key => $value)
+        {
+            $list[$key]["download"] = $this->validateNumber($value["download"]);
+            $list[$key]["upload"] = $this->validateNumber($value["upload"]);
+        }
+
         $tr = $this->createCollection($list);
 
         $dateModified = date('Y-m-d H:i:s');
@@ -304,5 +311,20 @@ class Repo
             }
         }
         return $collection;
+    }
+
+    /**
+     * Validate Download and Upload
+     * @param int|float $num 
+     * @return float|InvalidValue
+     */
+    protected function validateNumber($num)
+    {
+        $num = filter_var($num, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        if(!is_numeric($num))
+        {
+            throw new InvalidValue();
+        }
+        return $num;
     }
 }

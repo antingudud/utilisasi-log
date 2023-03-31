@@ -11,6 +11,9 @@ export function popup(url, response, callback)
 
             $("#popup").hide();
             $("#popup").fadeIn(150, function() {
+                $("#popup").on('click', function() {
+                    $(this).remove();
+                })
                 $("#popup").delay(3000).fadeOut('slow', function () {
                     $(this).remove();
                 })
